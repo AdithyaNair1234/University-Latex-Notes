@@ -643,5 +643,46 @@ end
 % Y axis - y, x axis - U(y), For a given time t
 plot(U(end,:),y,'blue');
 \end{lstlisting}
+\section{Implicit Fluid Dynamics}
+The derivation for the same(insert later)
+
+The final equations we get are,
+\begin{align*}
+	&a U _{i-1}(t + \Delta t) + b U_i(t+ \Delta t) + a U_{i+1}(t + \Delta t) = U_{i}(t) - \frac{\Delta t}{\rho}(\frac{\partial p}{\partial x}(t + \Delta t))_i + \Delta t g_x \\
+\end{align*}
+Where, 
+\[ 
+	a = \frac{-\mu \Delta t}{\rho \Delta y^2}
+\]
+\[
+	b = 1 + \frac{2\mu \Delta t}{\rho \Delta y^2}
+\]
+
+\begin{align*}
+	\begin{bmatrix}
+		b  & a & 0 & 0 & \cdots \\
+		a & b & a & 0 & \cdots \\
+		0 & a & b & a & \cdots \\  
+		\cdots & 0 & a & b & 0\\
+		\cdots & 0 & 0 & a & b \\
+	\end{bmatrix}
+	\begin{bmatrix}
+		u_1 \\
+		u_2 \\
+		\vdots \\
+		u_n \\
+		u_{n+1}
+	\end{bmatrix}
+	= 
+	\begin{bmatrix}
+		u2 - \frac{\Delta t}{\rho}\frac{\partial p}{\partial x} + \Delta t g_x \\
+		\vdots \\
+		\vdots \\
+		un - \cdots \\
+	\end{bmatrix}
+\end{align*}
+The boundary conditions tell us that the top and bottom most nodes are 0, we can then cancel out the the first and last row and column.
+Onto coding it all in Octave.
   \item Q(t) or the flow rate is given.
-\end{enumerate}\end{document}
+\end{enumerate}
+\end{document}
