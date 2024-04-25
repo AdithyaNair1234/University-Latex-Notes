@@ -1603,8 +1603,8 @@ The derivative of a vector function,
 \[
    \vec{r'}(t) = (x'(t),y'(t))
 \]
-\begin{theorem}
-   Let f be a scalar field defined on an open set $S 
+\begin{theorem} 
+ Let f be a scalar field defined on an open set $S 
    \subseteq R^n$, and let $\vec{r}$ be a vector-valued function which maps an interval $J$ from $\mathbb{R}^1$ into S. Define the composite function $g = f o \vec{r}$ on J, by the equation.
 \[
    g(t) = f(\vec{r}(t)) \text{ if } t \in J
@@ -1623,4 +1623,123 @@ g(t+h) - g(t) &= f(r(t+h)) - f(r(t)) \\
 g'(t) &= \nabla f \cdot r'(t)  + 0 \\
 \end{align*}
 \end{proof}
+\section{Vector Fields(Quick Recap)}
+\[
+	y = f(x)
+\]
+For a scalar function over a real variable, with a derivative.
+\[
+	f'(a) = \lim_{h \rightarrow 0}\frac{f(a+h) - f(a)}{h}
+\] 
+\[ 
+	f(a+h) - f(a) = hf'(a) + o(h)
+\]
+For a scalar field, where $f : S \subseteq R^n \rightarrow R$
+\[ 
+f'(\vec{a};\vec{y}) = \lim_{h \rightarrow 0} \frac{f(\vec{a} + h \vec{y}) - f(\vec{a})}{h}
+\]
+With $\|y\| = 1$, to create directional derivatives.
+But the existence of a directional derivative did not guarantee continuity at the point. There were still functions that seemed to have a derivative that weren't continuous at that point.
+From this arose the total derivative, $\nabla f$ which was a linear combination of all the directional derivatives along the standard basis (where $y = \hat{e_k}$) of a function.
+
+For functions with vector fields: $\vec{f} : S \subseteq R^n \rightarrow R^m$
+
+Where, 
+
+\[ \vec{f} = (f_1,f_2,\dots, f_m)\]
+and 
+\[\vec{f'} = (f_1',f_2',\dots, f_m')\]
+
+Now we'll have, 
+\[ \vec{f}(\vec{a} + h \vec{y}) - \vec{f}(\vec{a}) = \vec{T}_a (h \vec{y}) + \|hy\| \vec{E}(\vec{a};h\vec{y})) \]
+\[
+	\vec{T}_{\vec{a}}(\vec{y}) = \vec{f'}(a;\vec{y})
+\]
+\[ 
+	\vec{f'} = \sum_{k=1}^m f'_k \hat{e_k} = \sum \nabla f_k \cdot \vec{y} \hat{e_k}
+\]
+This might look familar , it's the directional derivative of that function along the direction of that function. This can be written as,
+
+\[
+\nabla f_k = 
+\begin{bmatrix} \frac{\partial f_k}{\partial x_1} \\ \dots \\ \frac{\partial f_k}{\partial x_n} \\ \end{bmatrix}^T \] \[
+\begin{bmatrix}
+	\frac{\partial f_1}{\partial x_1} & \dots & \frac{\partial f_1}{\partial x_n} \\
+	\vdots & \ddots & \vdots \\
+	\frac{\partial f_m}{\partial x_1} & \dots & \frac{\partial f_m}{\partial x_n}
+\end{bmatrix}
+\begin{bmatrix}
+	y_1 \\ 
+	\vdots \\
+	y_n \\
+\end{bmatrix}
+\]
+Let's take an example,
+
+\[
+	f(x,y) = x^2 - 3y 
+\]
+\[ 
+	\text{Parabola}: y = x^2 - x + 2
+\]
+\[
+	P = (1,2)
+\]
+
+What we have to do is find the derivative of the scalar field along the parabola, evaluated at the point $P$
+To do this we first find, 
+\begin{align*}
+	f'(\vec{a}, \vec{y}) &= \nabla f \cdot \vec{y} \\
+	\|y\| &= 1 \\
+	\nabla f &= (2x-3y,-3x) \\
+		 &= (\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y})
+\end{align*}
+Now we need to parametrize the parabola, where $x = t$
+\begin{align*}
+	x &= t \\
+	y &= t^2 - t + 2\\
+	\vec{r}(t) &= (t, t^2 - t + 2) \\
+\end{align*}
+Evaluating at point P.
+\begin{align*}
+	\vec{r'}(t) = (1,2t-1)\\
+	\vec{r'}(t) = (1,1); \hat{r}(t) = \frac{(1,1)}{\sqrt{2}} \\
+\end{align*}
+What we're finding is the directional derivative along the tangent of the given curve. 
+\[
+	\nabla f \cdot \vec{y}
+\]
+So the final answer is,
+\[ 
+	\begin{bmatrix}
+		-4 & -3
+	\end{bmatrix}
+	\begin{bmatrix}
+		\frac{1}{\sqrt{2}}	\\
+		\frac{1}{\sqrt{2}} \\
+	\end{bmatrix}
+	= \frac{-7}{\sqrt{2}}
+\]
+\section{Maximas and Minimas}
+For a scalar function for a real variable, $f(x)$
+The Taylor polynomial for a first degree derivative is,
+\[ 
+	f(a+h) - f(a) = hf'(a) + o(h)
+\]
+But what do we know about maximas and minimas? The function evaluated within that neighbourhood always yields a difference that is positive.
+
+Yet, h can be positive or negative. What this means is that, the derivative at those points must \textbf{necessarily} be 0.
+
+Similarly for scalar fields, 
+\[ 
+	f(\vec{a} + h\vec{y}) - f(\vec{a}) = \nabla f \cdot \vec{y} + \|y\|E(\vec{a};h\vec{y})
+\]
+\[
+	\frac{1}{2} \vec{y}^T H \vec{y} + \|\vec{y}\|^2 E_2(\vec{a};\vec{y})
+\]
+\begin{note}
+	There is a change in the evaluations, Exam 1, Exam 2 are of 10\% and 5$\%$ each and Exams 3 and 4 are 10\% each. The homework(on Probability and Statistics) is 15\%
+\end{note}
 \end{document}
+
+
