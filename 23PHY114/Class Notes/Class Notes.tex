@@ -555,8 +555,7 @@ U''(y) = \frac{U(y+\Delta y) - 2U(y) + U(y-\Delta y)}{\Delta y^2}
 
 \section{For Unidirectional Flow}
 Let's look at two cases and solve,
-\begin{enumerate}
-  \item $\frac{\partial p}{\partial x}$, the pressure gradient is given
+  $\frac{\partial p}{\partial x}$, the pressure gradient is given
     We assume, to be general, that the plates are moving with a speed, $U_h$ and $U_0$ respectively for the top and bottom.
 
     The equation is,
@@ -630,6 +629,8 @@ U = zeros(floor(T/deltaT),N+1);
 % Initial Conditions
 y = 0:deltaY:h;
 
+C = (dpdx + rho*g)/2*mu;
+Uexact = C.*(-y.^2 + h.*y);
 % Equation
 for k = 2:floor(T/deltaT)
   U(k,1) = U0;
@@ -644,7 +645,13 @@ end
 plot(U(end,:),y,'blue');
 \end{lstlisting}
 \section{Implicit Fluid Dynamics}
-The derivation for the same(insert later)
+\begin{align*}
+&\rho \frac{du}{dt} = - \frac{\partial p}{\partial t} + \mu \frac{\partial^2 u}{\partial y^2} + \rho g_x \\
+&\rho \frac{U(y, t + \Delta t) - U(y,t)}{\Delta t} =\frac{1}{\rho} \frac{\partial P}{\partial x}(t + \Delta t) + \frac{\mu}{\rho}U_{i+1}(t+\Delta t) - \frac{-2U_i(t+\Delta t) + U_{i-1}(t+\Delta t) + g_x(t+\Delta t)}{\Delta y^2} \\
+&\frac{\rho U_i(t+\Delta t) - U_i(t))}{\Delta t} = \frac{-\partial p}{\partial x} + \rho g_x + \mu \frac{U_{i+1}(t + \Delta t) - 2 u_i (t+\Delta t) + U_{i-1}(t+\Delta t)}{\Delta y^2}\\
+&\text{We finally get the expression,} \\
+&U_{i}(t+\Delta t)(\frac{\rho}{\Delta t} + \frac{2\mu}{(\Delta y)^2}) + (\frac{-\mu}{\Delta y^2})U_{i+1}(t+\Delta t) + (\frac{-\mu}{\Delta y^2}U_{i-1}(t+\Delta t) = \frac{S}{\Delta t}U_i(t) - \frac{\partial P}{\partial x} + \rho g_x\\
+\end{align*}
 
 The final equations we get are,
 \begin{align*}
@@ -683,6 +690,104 @@ Where,
 \end{align*}
 The boundary conditions tell us that the top and bottom most nodes are 0, we can then cancel out the the first and last row and column.
 Onto coding it all in Octave.
-  \item Q(t) or the flow rate is given.
+\begin{lstlisting}
+%  Constants
+mu = 0.6;
+N = 32;
+h = 1;
+rho = 0.5;
+dpdx = -2;
+gx = 0.4;
+alpha1 = 0.1;
+alpha2 = 0.5;
+
+
+% Time and space steps
+deltaY = h/N;
+deltaT = -a*rho*deltaY^2/mu;
+T = 20000*deltaT;
+
+a = -0.4;
+b = 1 + 2*mu*deltaT/rho*(deltaY^2);
+
+% Initial Velocities
+uInitial = zeros(N-1,1);
+uInitial(1) = alpha1;
+uInitial(end) = alpha2;
+
+U = uInitial;
+y = deltaY:deltaY:h-deltaY;
+
+% Calculating the velocities
+function A = constantCoefficientMatrix(a,b,N)
+	A = b*eye(N-1,N-1);
+	aMatrix1 = zeros(N-1,N-1);
+	aMatrix1(1:end-1,2:end) = a*eye(N-2,N-2);
+	aMatrix2 = zeros(N-1,N-1);
+	aMatrix2(2:end,1:end-1) = a*eye(N-2,N-2);
+	A = A + aMatrix1 + aMatrix2;
+end
+
+c = deltaT/rho*dpdx + deltaT*gx;
+function f = forceVector(c,a,alpha1,alpha2,Ut,N)
+	f = c*ones(N-1,1);
+	f(1) -= a*alpha1;
+	f(end) -= a*alpha2;
+	f += Ut;
+end
+for t = 0:deltaT:T
+	f = forceVector(c,a,alpha1,alpha2,U,N);
+	A = constantCoefficientMatrix(a,b,N);
+	U = A\f;
+	plot(U,y);
+	pause(0.2);
+end
+\end{lstlisting}
+\chapter{Introduction To Robotics}
+This is a very brief introduction to robotics, which will connect back to Mechanics 1. 
+There are two main components to this section of the course.
+\begin{enumerate}
+	\item Control
+	\item \textit{Two-arm} robotic hand
 \end{enumerate}
+
+The first thing to know in such a robotics course, is that the word robot is an acronym. Random Optical Binary Oscillating Technology. Robots are fundamentally about trying to replicate human motion. They are a replacement for human effort. 
+ 
+Now we try to understand with a problem.
+
+Refer to Problem \textit{19.3.26},
+
+We usually have a equation for force, that governs the motion and force of the body.
+
+\[ 
+	m\ddot{x} + c\dot{x} + kx = F
+\]
+
+Recall, the pendulum equation
+
+\[ 
+	\frac{d^2 \theta}{dt^2} - \frac{g}{l} \cos{\theta} = M
+\]
+
+Where M is an external moment supplied at the point from which the pendulumm is suspended.
+
+We can calculate the force applied on this pendulum by tracking its position.
+
+In robotics, it's the other way around. What we can control is the force acting on the pendulum, to get the desired motion.
+
+All of robotics can be summarized as this - controlling f and m.
+
+We control position, velocity and acceleration, given that they are proportional to force.
+\begin{align*}
+	f &\propto x \\
+	  &\propto \dot{x} \\
+	  &\propto \ddot{x} \\
+\end{align*}
+
+We have some output $x(t)$, and some input $\overline{x}(t) = K_p x(t) + K_d \dot{x}(t) + K_I \int x(t) dt$ 
+
+\begin{note}
+	Quiz 3 - Open Code exam, May 2(Thursday) .(piece of paper allowed)
+\end{note}
 \end{document}
+

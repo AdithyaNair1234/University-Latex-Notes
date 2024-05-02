@@ -24,7 +24,8 @@ U = zeros(floor(T/deltaT),N+1);
 y = 0:deltaY:h;
 
 
-
+C = (dpdx + rho*g)/2*mu;
+Uexact = C.*(-y.^2 + h.*y);
 % Equation
 for k = 2:floor(T/deltaT)
   U(k,1) = U0;
@@ -37,7 +38,8 @@ end
 % Plotting
 % Y axis - y, x axis - U(y), For a given time t
 plot(U(end,:),y,'blue');
-
+hold on;
+plot(Uexact*ones(size(y)), y, 'red');
 
 
 

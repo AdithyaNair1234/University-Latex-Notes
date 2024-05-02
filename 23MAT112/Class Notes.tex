@@ -1720,7 +1720,7 @@ So the final answer is,
 	\end{bmatrix}
 	= \frac{-7}{\sqrt{2}}
 \]
-\section{Maximas and Minimas}
+\section{Extremums}
 For a scalar function for a real variable, $f(x)$
 The Taylor polynomial for a first degree derivative is,
 \[ 
@@ -1734,12 +1734,49 @@ Similarly for scalar fields,
 \[ 
 	f(\vec{a} + h\vec{y}) - f(\vec{a}) = \nabla f \cdot \vec{y} + \|y\|E(\vec{a};h\vec{y})
 \]
+The partial derivatives are 0, therefore the gradient at an extremum is also 0.
+\begin{theorem}
+	Let $f$ be a scalar field with continuous second-order partial derivatives $D_{ij}f$ in an n-ball $B(\vec{a})$. Then for all $\vec{y} \in \mathbb{R}^n$ such that $\vec{a} + \vec{y} \in B(\vec{a})$, we have
+\[ 
+	f(\vec{a} + \vec{y}) - f(\vec{a}) = \nabla f(\vec{a}) \cdot \vec{y} + \frac{1}{2!} \vec{y}^T H(\vec{a} + c \vec{y})\vec{y}, \text{where} 0 < c< 1
+\] 
+or 
 \[
-	\frac{1}{2} \vec{y}^T H \vec{y} + \|\vec{y}\|^2 E_2(\vec{a};\vec{y})
+	f(\vec{a} + \vec{y}) - f(\vec{a} = \nabla f(\vec{a})\cdot \vec{y} + \frac{1}{2!} \vec{y}^T H(\vec{a}) \vec{y} + \|y \|^2 E_2(\vec{a,\vec{y}}
 \]
+\end{theorem}
 \begin{note}
 	There is a change in the evaluations, Exam 1, Exam 2 are of 10\% and 5$\%$ each and Exams 3 and 4 are 10\% each. The homework(on Probability and Statistics) is 15\%
 \end{note}
+
+\section{Tangent Plane}
+\begin{align*}
+	f: S \subseteq \mathbb{R}^n \rightarrow \mathbb{R} \\
+	L(c) = {x \in S | f(\vec{x}) = c}
+\end{align*}
+
+The set L is known as the level set for a given constant c.
+For a given level set L(c)
+\begin{align*}
+&c = f(\vec{r}(t)) = g(t), t \in J \subseteq \mathbb{R}\\
+&g'(t) = \nabla f \cdot \vec{r'}(t) = 0 \\
+\end{align*}
+
+From this, the gradient is orthogonal to the tangent of that curve.
+
+\begin{definition}[Tangent Plane]
+The plane formed by all the tangents orthogonal to the gradient at that point.The gradient has to be non-zero.
+\end{definition}
+
+Recall, the equation of a plane is
+
+\[
+	\hat{N} \cdot (\vec{x} - \vec{x}_0) = 0
+\]
+
+So the tangent plane is defined by,
+\[
+	\nabla f \cdot r'(t) = 0
+\]
+
 \end{document}
-
-
