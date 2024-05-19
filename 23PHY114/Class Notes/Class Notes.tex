@@ -786,8 +786,392 @@ We control position, velocity and acceleration, given that they are proportional
 
 We have some output $x(t)$, and some input $\overline{x}(t) = K_p x(t) + K_d \dot{x}(t) + K_I \int x(t) dt$ 
 
+The flow of it all is $\text{transfer  function} \rightarrow \text{PID Control}\rightarrow$  and doing 3 simple robots:
+
+\begin{enumerate}
+	\item Balancing a stick
+	\item Two-arm elbow manipulator (double bar)
+	\item Two-arm cartesian robot
+\end{enumerate}
+The majority of this course is focused on deriving the equations of motions for the above 3 robots. The next step is PID Control (Proportional Integral Differential) Control. We control these robots by controlling the force and moments.
+
+Looking at PID
+The force should be such that, it is a linear combination of $\theta$, $\int \theta dt$ and $\dot{\theta}$. The last and final step is to derive the transfer function, since this is an introduction.
+
+The transfer function is done by plugging the independent variable as a function of s like so:
+\begin{align*}
+	x &= Ae^{st} \\
+	\dot{x} &= Ase^{st} \\
+	\ddot{x} &= As^2e^{st} \\
+\end{align*}
+
+So for the PID relation of F to $\theta$,
+
+\begin{align*}
+	\theta(t) \rightarrow \theta(s) \\
+	\dot{\theta(t)} \rightarrow s\theta(s) \\
+	\int \theta (t) \rightarrow \frac{\theta(s)}{s} \\
+\end{align*}
+
+Now the original equation, 
+\[m \ddot{x} + c\dot{x} + k x = F(t) = K_p x + K_I \int x dt + K_d \dot{x} \]
+Becomes,
+\[ms^2  + cs + k = K_p + \frac{K_I}{s} + K_Ds\]
+
+But there's something missing. Robots do not necessarily behave the way we want them to, the assumption that they do has lead to the transfer function losing the inputs and outputs. We assume that the robot has some desired displacement $x_i$ or action it wants to perform, and $x$ is the real displacement that occurs.
+We get,
+\[ x_i = B(s)e^{st}\]
+\[ x = A(s)e^{st}\]
+
+\[m \ddot{x} + c\dot{x} + k x = F(t) = K_p x_i + K_I \int x_i dt + K_d \dot{x_i} \]
+\[Ams^2  + Acs + Ak = B K_p + \frac{BK_I}{s} + BK_Ds\]
+\[A(ms^2  + cs + k) = B(K_p + \frac{K_I}{s} + K_Ds)\]
+
+If $x_i$ and $x$ are the input and output, then the transfer function has to be $\frac{A}{B}$
+
+Therefore,
+\[\frac{K_p + \frac{K_I}{s} + K_d s}{ms^2 + cs + k}\]
 \begin{note}
-	Quiz 3 - Open Code exam, May 2(Thursday) .(piece of paper allowed)
+	FIND WHAT THIS KIND OF FRACTION IS CALLED
 \end{note}
+This was one way to derive the transfer function. The engineering way is,
+
+\[TF = \frac{A(s)}{F(s)} = \frac{K_p}{ms^2 + cs + k + K_p}\]
+
+Engineers put in a "P-control" instead of a PID control, which is easier to solve for.
+
+The way this is obtained is by putting an error variable, $e$, the error is $x - x_i$. This derivation is out of the scope of the current course, but the basic idea is to use the error.
+
+If we used PI-Control, then, finding through the error,
+
+\[TF = \frac{K_p + \frac{K_I}{s}}{ms^2 + cs + (K + K_P + \frac{K_I}{s})}\]
+Simplifying further,
+\[TF = \frac{K_p s + K_I}{ms^3 + cs^2 + (K + Kp)s + K_I}\]
+
+For a PID-control, then,
+\[TF = \frac{K_p s + K_i + K_d s^2}{ms^3 + (c + K_d)s^2 + (K + K_p)s + K_I}\]
+\section{MATLAB/Octave Notes}
+\begin{lstlisting}
+Kp = 1;
+Ki = 1;
+Kd = 1;
+
+s = tf('s');
+C = Kp + Ki/s + Kd*s
+% Alternatively, we may use MATLAB's pid object to generate an equivalent continuous-time controller as follows: 
+C = pid(Kp,Ki,Kd)
+% Let's convert the pid object to a transfer function to verify that it yields the same result as above:
+tf(C)
+\end{lstlisting}
+Suppose we have a simple mass-spring-damper system.
+
+The governing equation of this system is
+\[m \ddot{x} + c\dot{x} + k x = F(t) = K_p x + K_I \int x dt + K_d \dot{x} \]
+Taking the Laplace transform of the governing equation, we get
+\[ms^2  + cs + k = F(s)\]
+
+The goal of this problem is to show how each of the terms, $K_p$, $K_i$, and $K_d$, contributes to obtaining the common goals of:
+\begin{enumerate}
+	\item Fast rise time
+	\item Minimal overshoot
+	\item Zero steady-state error
+ 
+\end{enumerate}
+
+Substituting these values into the above transfer function
+
+\[\frac{X(s)}{F(s)} = \frac{1}{s^2 + 10s + 20} \]
+\subsection{Open-Loop Step Response}
+\begin{lstlisting}
+s = tf('s');
+P = 1/(s^2 + 10*s + 20);
+step(P)
+\end{lstlisting}
+The DC gain of the plant transfer function is 1/20, so 0.05 is the final value of the output to a unit step input. This corresponds to a steady-state error of 0.95, which is quite large. Furthermore, the rise time is about one second, and the settling time is about 1.5 seconds. Let's design a controller that will reduce the rise time, reduce the settling time, and eliminate the steady-state error.
+\subsection{Proportional Control}
+From the table shown above, we see that the proportional controller ($K_p$) reduces the rise time, increases the overshoot, and reduces the steady-state error.
+
+The closed-loop transfer function of our unity-feedback system with a proportional controller is the following, where $X(s)$ is our output (equals $Y(s)$) and our reference $R(s)$ is the input:
+
+\[T(s) = \frac{X(s)}{R(s)} = \frac{K_p}{s^2 + 10s + (20 + K_p)} \]
+
+
+Let the proportional gain ($K_p$) equal 300 and change the m-file to the following:
+\begin{lstlisting}
+Kp = 300;
+C = pid(Kp)
+T = feedback(C*P,1)
+
+t = 0:0.01:2;
+step(T,t)
+
+\end{lstlisting}
+Now, let's take a look at PD control. From the table shown above, we see that the addition of derivative control ($K_d$) tends to reduce both the overshoot and the settling time. The closed-loop transfer function of the given system with a PD controller is:
+
+\[T(s) = \frac{X(s)}{R(s)} = \frac{K_d s + K_p}{s^2 + (10 + K_d) s + (20 + K_p)} \]
+
+Let $K_p$ equal 300 as before and let $K_d$ equal 10. Enter the following commands into an m-file and run it in the MATLAB command window.
+\begin{lstlisting}
+Kp = 300;
+Kd = 10;
+C = pid(Kp,0,Kd)
+T = feedback(C*P,1)
+
+t = 0:0.01:2;
+step(T,t)
+\end{lstlisting}
+\subsection{PI Control}
+Before proceeding to PID control, let's investigate PI control. From the table, we see that the addition of integral control ($K_i$) tends to decrease the rise time, increase both the overshoot and the settling time, and reduces the steady-state error. For the given system, the closed-loop transfer function with a PI controller is:
+
+\[ T(s) = \frac{X(s)}{R(s)} = \frac{K_p s + K_i}{s^3 + 10 s^2 + (20 + K_p )s + K_i} \]
+
+Let's reduce $K_p$ to 30, and let $K_i$ equal 70. Create a new m-file and enter the following commands.
+\begin{lstlisting}
+Kp = 30;
+Ki = 70;
+C = pid(Kp,Ki)
+T = feedback(C*P,1)
+
+t = 0:0.01:2;
+step(T,t)
+\end{lstlisting}
+\subsection{PID Control}
+ow, let's examine PID control. The closed-loop transfer function of the given system with a PID controller is:
+
+\[ T(s) = \frac{X(s)}{R(s)} = \frac{K_d s^2 + K_p s + K_i}{s^3 + (10 + K_d)s^2 + (20 + K_p)s + K_i } \]
+
+After several iterations of tuning, the gains $K_p$ = 350, $K_i$ = 300, and $K_d$ = 50 provided the desired response. To confirm, enter the following commands to an m-file and run it in the command window. You should obtain the following step response.
+\begin{lstlisting}
+Kp = 350;
+Ki = 300;
+Kd = 50;
+C = pid(Kp,Ki,Kd)
+T = feedback(C*P,1);
+
+t = 0:0.01:2;
+step(T,t)
+\end{lstlisting}
+\section{Inverted Pendulum System Modelling}
+Below are the free-body diagrams of the two elements of the inverted pendulum system.
+
+Summing the forces in the free-body diagram of the cart in the horizontal direction, you get the following equation of motion.
+
+$$ M\ddot{x}+b\dot{x}+N = F $$
+
+Note that you can also sum the forces in the vertical direction for the cart, but no useful information would be gained.
+
+Summing the forces in the free-body diagram of the pendulum in the horizontal direction, you get the following expression for the reaction force $N$.
+
+$$ N= m\ddot{x}+ml\ddot{\theta}\cos\theta-ml\dot{\theta}^2\sin\theta $$
+
+If you substitute this equation into the first equation, you get one of the two governing equations for this system.
+
+$$(M+m)\ddot{x}+b\dot{x}+ml\ddot{\theta}\cos\theta-ml\dot{\theta}^2\sin\theta=F $$
+
+To get the second equation of motion for this system, sum the forces perpendicular to the pendulum. Solving the system along this axis greatly simplifies the mathematics. You should get the following equation.
+
+$$P\sin\theta+N\cos\theta-mg\sin\theta=ml\ddot{\theta}+m\ddot{x}\cos\theta$$
+
+To get rid of the $P$ and $N$ terms in the equation above, sum the moments about the centroid of the pendulum to get the following equation.
+
+$$-Pl\sin\theta-Nl\cos\theta=I\ddot{\theta}$$
+
+Combining these last two expressions, you get the second governing equation.
+
+$$(I+ml^2)\ddot{\theta}+mgl\sin\theta=-ml\ddot{x}\cos\theta $$
+
+Since the analysis and control design techniques we will be employing in this example apply only to linear systems, this set of equations needs to be linearized. Specifically, we will linearize the equations about the vertically upward equillibrium position, $\theta$ = $\pi$, and will assume that the system stays within a small neighborhood of this equillbrium. This assumption should be reasonably valid since under control we desire that the pendulum not deviate more than 20 degrees from the vertically upward position. Let $\phi$ represent the deviation of the pedulum's position from equilibrium, that is, $\theta$ = $\pi$ + $\phi$. Again presuming a small deviation ($\phi$) from equilibrium, we can use the following small angle approximations of the nonlinear functions in our system equations:
+
+$$ \cos \theta = \cos(\pi + \phi) \approx -1 $$
+
+$$ \sin \theta = \sin(\pi + \phi) \approx -\phi $$
+
+$$ \dot{\theta}^2 = \dot{\phi}^2 \approx 0 $$
+
+After substiting the above approximations into our nonlinear governing equations, we arrive at the two linearized equations of motion. Note $u$ has been substituted for the input $F$.
+
+$$ (I+ml^2)\ddot{\phi}-mgl\phi=ml\ddot{x} $$
+
+$$ (M+m)\ddot{x}+b\dot{x}-ml\ddot{\phi}=u $$
+
+\subsection{Transfer Function}
+To obtain the transfer functions of the linearized system equations, we must first take the Laplace transform of the system equations assuming zero initial conditions. The resulting Laplace transforms are shown below.
+
+$$(I+ml^2)\Phi(s)s^2-mgl\Phi(s)=mlX(s)s^2$$
+
+$$(M+m)X(s)s^2+bX(s)s-ml\Phi(s)s^2=U(s)$$
+
+Recall that a transfer function represents the relationship between a single input and a single output at a time. To find our first transfer function for the output $\Phi(s)$ and an input of $U(s)$ we need to eliminate $X(s)$ from the above equations. Solve the first equation for $X(s)$.
+
+$$ X(s)=\left[{\frac{I+ml^2}{ml}-\frac{g}{s^2}}\right]\Phi(s) $$
+
+Then substitute the above into the second equation.
+
+$$(M+m)\left[\frac{I+ml^2}{ml}-\frac{g}{s^2}\right]\Phi(s)s^2+b\left[\frac{I+ml^2}{ml}-\frac{g}{s^2}\right]\Phi(s)s-ml\Phi(s)s^2=U(s)$$
+
+Rearranging, the transfer function is then the following
+
+$$\frac{\Phi(s)}{U(s)}=\frac{\frac{ml}{q}s^2}{s^4+\frac{b(I+ml^2)}{q}s^3-\frac{(M+m)mgl}{q}s^2-\frac{bmgl}{q}s}$$
+
+where,
+
+$$q=[(M+m)(I+ml^2)-(ml)^2]$$
+
+From the transfer function above it can be seen that there is both a pole and a zero at the origin. These can be canceled and the transfer function becomes the following.
+
+$$P_{pend}(s) = \frac{\Phi(s)}{U(s)}=\frac{\frac{ml}{q}s}{s^3+\frac{b(I+ml^2)}{q}s^2-\frac{(M+m)mgl}{q}s-\frac{bmgl}{q}} \qquad [ \frac{rad}{N}]$$
+
+Second, the transfer function with the cart position $X(s)$ as the output can be derived in a similar manner to arrive at the following.
+
+$$P_{cart}(s) = \frac{X(s)}{U(s)} = \frac{ \frac{ (I+ml^2)s^2 - gml } {q} }{s^4+\frac{b(I+ml^2)}{q}s^3-\frac{(M+m)mgl}{q}s^2-\frac{bmgl}{q}s} \qquad [ \frac{m}{N}] $$
+\subsection{State Space}
+The linearized equations of motion from above can also be represented in state-space form if they are rearranged into a series of first order differential equations. Since the equations are linear, they can then be put into the standard matrix form shown below.
+
+$$ \left[{\begin{array}{c} \dot{x}\\ \ddot{x}\\ \dot{\phi}\\ \ddot{\phi} \end{array}}\right] = \left[{\begin{array}{cccc} 0&1&0&0\\ 0&\frac{-(I+ml^2)b}{I(M+m)+Mml^2}&\frac{m^2gl^2}{I(M+m)+Mml^2}&0\\ 0&0&0&1\\ 0&\frac{-mlb}{I(M+m)+Mml^2}&\frac{mgl(M+m)}{I(M+m)+Mml^2}&0 \end{array}}\right] \left[{\begin{array}{c} x\\ \dot{x}\\ \phi\\ \dot{\phi} \end{array}}\right]+ \left[{\begin{array}{c}0\\ \frac{I+ml^2}{I(M+m)+Mml^2}\\ 0 \\ \frac{ml}{I(M+m)+Mml^2} \end{array}}\right]u$$
+
+$${\bf y} = \left[{\begin{array}{cccc} 1&0&0&0\\0&0&1&0 \end{array}}\right] \left[{\begin{array}{c} x\\ \dot{x}\\ \phi\\ \dot{\phi} \end{array}}\right]+ \left[{\begin{array}{c} 0\\0 \end{array}}\right]u$$
+
+The $C$ matrix has 2 rows because both the cart's position and the pendulum's position are part of the output. Specifically, the cart's position is the first element of the output $\mathbf{y}$ and the pendulum's deviation from its equilibrium position is the second element of $\mathbf{y}$.
+
+
+\subsection{In MATLAB}
+\subsubsection{Transfer Function}
+\begin{lstlisting}
+M = 0.5;
+m = 0.2;
+b = 0.1;
+I = 0.006;
+g = 9.8;
+l = 0.3;
+q = (M+m)*(I+m*l^2)-(m*l)^2;
+s = tf('s');
+
+P_cart = (((I+m*l^2)/q)*s^2 - (m*g*l/q))/(s^4 + (b*(I + m*l^2))*s^3/q - ((M + m)*m*g*l)*s^2/q - b*m*g*l*s/q);
+
+P_pend = (m*l*s/q)/(s^3 + (b*(I + m*l^2))*s^2/q - ((M + m)*m*g*l)*s/q - b*m*g*l/q);
+
+sys_tf = [P_cart ; P_pend];
+
+inputs = {'u'};
+outputs = {'x'; 'phi'};
+
+set(sys_tf,'InputName',inputs)
+set(sys_tf,'OutputName',outputs)
+
+sys_tf
+\end{lstlisting}
+\subsubsection{State Space}
+\begin{lstlisting}
+M = .5;
+m = 0.2;
+b = 0.1;
+I = 0.006;
+g = 9.8;
+l = 0.3;
+
+p = I*(M+m)+M*m*l^2; %denominator for the A and B matrices
+
+A = [0      1              0           0;
+     0 -(I+m*l^2)*b/p  (m^2*g*l^2)/p   0;
+     0      0              0           1;
+     0 -(m*l*b)/p       m*g*l*(M+m)/p  0];
+B = [     0;
+     (I+m*l^2)/p;
+          0;
+        m*l/p];
+C = [1 0 0 0;
+     0 0 1 0];
+D = [0;
+     0];
+
+states = {'x' 'x_dot' 'phi' 'phi_dot'};
+inputs = {'u'};
+outputs = {'x'; 'phi'};
+
+sys_ss = ss(A,B,C,D,'statename',states,'inputname',inputs,'outputname',outputs)
+\end{lstlisting}
+The above state-space model can also be converted into transfer function form employing the tf command as shown below. Conversely, the transfer function model can be converted into state-space form using the ss command. 
+\begin{lstlisting}
+sys_tf = tf(sys_ss)
+\end{lstlisting}
+\section{The Flow Of Robotics}
+The problems have this flow:
+\begin{itemize}
+	\item Equations Of Motion
+	\item Laplace Transform
+	\item Transfer Function
+	\item Roots, poles, plots, state space analysis
+\end{itemize}
+We now try to find 
+\subsection{Equations Of Motion}
+\[\Sigma \vec{f} = m \vec{a}_{cm}\] 
+
+\[ \Sigma \vec{M}_{/O} = I_{ZZ}^O \vec{\alpha}\]
+For a given problem involving a roller support fixing a pendulum.
+
+\begin{note}
+The Laplace Transform is only possible if the equation is linear.
+\end{note}
+\begin{align*}
+	f_{in} \hat{i} + (R_y - mg)\hat{j} &= m \frac{d^2}{dt} (\frac{l}{2} \cos(\theta) \hat{i}  + \frac{l}{2} \sin{\theta} \hat{j}) \\
+					   &= \frac{ml}{2} \frac{d}{dt}(-\dot{\theta} \sin{\theta} \hat{i} + \dot{\theta} \cos{\theta})\hat{j} \\
+					   &= \frac{ml}{2}(-\dot{\theta} \sin{\theta}-\dot{\theta} \cos{theta})\hat{i} + (\ddot{\theta} \cos{theta} - \theta^2 \sin{theta}) \\
+\end{align*}
+This is a non-linear equation, we cannot apply the Taylor series onto it.
+
+What about if $\theta \rightarrow 0$,
+
+\begin{align*}
+	f_{in} = \frac{ml}{2}(\ddot{\theta} \theta + \dot{\theta}^2) \\
+	R_y - mg = \frac{ml}{2}(\ddot{\theta} - \dot{(\theta)}\theta)
+\end{align*} 
+Here's the next problem, $(\dot{\theta)}^2$ is still part of each equation, here comes an engineering guess. We're making the assumption that $\dot{\theta}^2 = 0$
+
+We get,
+\begin{align*}
+	f_{in} = \frac{ml}{2}(\ddot{\theta} \theta) \\
+	R_y - mg = \frac{ml}{2}(\ddot{\theta})  \\ 
+\end{align*}
+The problem still remains with the term $\ddot{\theta} \theta$,
+
+We look at the 2nd equation,
+
+\begin{align*}
+	\Sigma M_{/O} &= I_{ZZ}^O \ddot{\theta} \\
+	\implies \vec{r}_{CM} \times (-mg)\hat{j} &= I_{ZZ}^{O} \ddot{\theta} \\
+	\implies \frac{l}{2} (\cos{\theta}\hat{i} + \sin{\theta} \hat{j} \times (-mg)\hat{j} &= I_{ZZ}^O \ddot{\theta}) \\
+	\implies -mg \frac{l}{2} \cos{\theta} &= \frac{ml^2}{3} \ddot{\theta}
+\end{align*}
+Now we take the limit $\theta \rightarrow 0$
+\[-mg \frac{l}{2} = \frac{ml^2}{3} \ddot{\theta}\]
+This is easier to deal with now.
+But, we've lost something. We do not have any equations that talk about the force input or the path of the object.
+
+The remedy is the origin, assume that the origin is moving, and we keep another system that tracks the movement of this origin.
+
+\begin{align*}
+	\vec{r}_{CM} &= \frac{l}{2}(\cos{\theta}\hat{i} + \sin{\theta}\hat{j} + x_o \hat{i}) \\
+	\vec{v}_{CM} &= \frac{l}{2}(\dot{\theta}\sin{\theta}\hat{i} + \dot{\theta} \cos{\theta} \hat{j} + \dot{x}_{o} \hat{i}) \\
+	\vec{a}_{CM} &= \frac{l}{2} (-\ddot{\theta} \cos{\theta} - \dot{\theta}^2 \sin{\theta} \hat{i}  + (\ddot{\theta} \cos{\theta} - \theta^2 \sin{\theta} \hat{j})) + \ddot{x_o} \hat{i}
+\end{align*}
+
+We can convert this into a set of matrices,
+\[
+	M \begin{bmatrix}
+		\ddot{x_o} \\
+		\ddot{\theta} \\
+	\end{bmatrix}
+	+ 
+	K \begin{bmatrix}
+		x_o \\
+		\theta \\
+	\end{bmatrix}
+	= 
+	\begin{bmatrix}
+	&	\\
+	&	\\
+	\end{bmatrix}
+\]
+
 \end{document}
 

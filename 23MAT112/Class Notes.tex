@@ -1738,13 +1738,26 @@ The partial derivatives are 0, therefore the gradient at an extremum is also 0.
 \begin{theorem}
 	Let $f$ be a scalar field with continuous second-order partial derivatives $D_{ij}f$ in an n-ball $B(\vec{a})$. Then for all $\vec{y} \in \mathbb{R}^n$ such that $\vec{a} + \vec{y} \in B(\vec{a})$, we have
 \[ 
-	f(\vec{a} + \vec{y}) - f(\vec{a}) = \nabla f(\vec{a}) \cdot \vec{y} + \frac{1}{2!} \vec{y}^T H(\vec{a} + c \vec{y})\vec{y}, \text{where} 0 < c< 1
+	f(\vec{a} + \vec{y}) - f(\vec{a}) = \nabla f(\vec{a}) \cdot \vec{y} + \frac{1}{2!} \vec{y}^T H(\vec{a} + c \vec{y})\vec{y}, \text{where } 0 < c< 1
 \] 
 or 
 \[
-	f(\vec{a} + \vec{y}) - f(\vec{a} = \nabla f(\vec{a})\cdot \vec{y} + \frac{1}{2!} \vec{y}^T H(\vec{a}) \vec{y} + \|y \|^2 E_2(\vec{a,\vec{y}}
+f(\vec{a} + \vec{y}) - f(\vec{a} = \nabla f(\vec{a})\cdot \vec{y} + \frac{1}{2!} \vec{y}^T H(\vec{a}) \vec{y} + \|y \|^2 E_2(\vec{a},\vec{y})
 \]
 \end{theorem}
+\begin{proof}
+	Keep $y$ fixed. $g(u) = f(\vec{a} + u\vec{y}$) , $u \in [0,1] \subseteq \mathbb{R} $
+\[ f(\vec{a} + \vec{y}) - f(a) = g(1) - g(0) = g^{(1)}(0)(1-0) + \frac{g^{(2)}(c)}{2!} \]
+\end{proof}
+The Hessian here is a gradient of a gradient.
+	\[ 
+		\begin{bmatrix}
+			f^2_{x_1^2} & f^2_{x_2 x_1} & \dots & f^2_{x_n x_1} \\
+			f^2_{x_1 x_2} & \dots & & \vdots \\
+			\vdots & \ddots & & \vdots \\
+			f^2_{x_1 x_n} & \dots & \dots &  f^2_{x_n^2} \\
+		\end{bmatrix}
+	\]
 \begin{note}
 	There is a change in the evaluations, Exam 1, Exam 2 are of 10\% and 5$\%$ each and Exams 3 and 4 are 10\% each. The homework(on Probability and Statistics) is 15\%
 \end{note}
@@ -1779,4 +1792,103 @@ So the tangent plane is defined by,
 	\nabla f \cdot r'(t) = 0
 \]
 
-\end{document}
+\section{Mean-value theorem for derivatives}
+Assume that f is continuous everywhere on a closed interval $[a,b]$ and has a derivative at each point of the derivative of the open interval $(a,b)$. Then there exists at least one interior point  $c$ of $[a,b]$ for which,
+\[ f'(c) = \frac{f(b) - f(a)}{b-a} \]
+\section{Mean-value theorem for integrals}
+Assume that f is continuous everywhere on a closed interval $[a,b]$ Then there exists at least one interior point  $c$ of $[a,b]$ for which,
+\[ \int_a^b f(x) dx = f(c)(b-a) \]
+\section{Weighted Mean-value theorem for derivatives}
+Assume that f, g is continuous everywhere on a closed interval $[a,b]$. If g never changes sign in the interval $[a,b]$ Then there exists for some interior point  $c$ of $[a,b]$ for which,
+\[ \int_a^b g(x) f(x) dx = f(c) \int_a^b g(x)dx \]
+
+\begin{note}
+	Recall Taylor's Approximation Theorem - Assume $f$ has a continuous derivative of order $(n+1)$ in some interval containing $a$. Then, for every $x$ in this interval, we have the Taylor formula, 
+	\[ f(x) = \sum_{k=0}^n \frac{f^{(k)}(a)}{k!}(x-a)^k + E_n(x), E_n(x) = \frac{1}{n!} \int_{a}^x (x-t)^n f^{(n+1)} (t) dt \]
+\end{note}
+
+The Taylor's approximation has an error function which does not change sign. Let's write it in the form of the weighted mean-value.
+
+
+\begin{align*}
+	E_n(x) &= \frac{1}{n!} \int_a^x (x-t)^n f^{(n+1)}(t) dt \\
+	       &= \frac{1}{n!} f^{(n+1)}(c) \int_a^x (x-t)^n dt \\
+	       &= \frac{1}{(n+1)!} f^{(n+1)} (c) (x-a)^{n+1}\\
+\end{align*}
+
+\[ f(x) = f^{(0)}(a) + f^{(1)}(c)(x-a) \]
+\pagebreak
+
+\begin{exercise} 
+	\begin{enumerate}
+		\begin{align*}
+			z = 2 - x^2 - y^2 \\
+			z = x^2 + y^2 \\
+			z = xy \\
+			z = x^3 - 3xy^2 \\
+			z = x^2y^2 \\
+			z = 1 - x^2 \\
+		\end{align*}
+	\end{enumerate}
+\end{exercise}
+	
+\begin{theorem}
+	Let $A= [a_{ij}]$ be an $n \times n$  real symetric matrix and let the quadratic form, 
+	\[ Q(\vec{y}) = \vec{y^T} A \vec{y}\]
+	Then we have,
+	\begin{enumerate}
+		\item $Q(\vec{y}) > 0 \ \forall \ \vec{y} \neq \vec{0}$ iff all eigenvalues of A are positive(A is positive definite)
+		\item $Q(\vec{y}) < 0 \ \forall \ \vec{y} \neq \vec{0}$ iff all eigenvalues of A are negative.(A is negative definite)
+	\end{enumerate}
+\end{theorem}
+The motivation behind proving this theorem, look at the Taylor expansion of the derivative,
+
+\[f(\vec{a} + \vec{y}) = f(\vec{a}) + \nabla f(\vec{a}) \cdot \vec{y} + \frac{1}{2} \vec{y^T}H(\vec{a}) \vec{y} + \| \vec{y}^2 \| E_2(a,y)\]
+
+At maximas or minimas,$\nabla f = 0$
+
+The only way to find $y^T H(\vec{a}) y$ is to know at the very least what the sign of the term is.
+\begin{proof}
+	\begin{align*}
+		\text{Let } y^T P &= \vec{x}^T \\
+				  &= \vec{x}^T D \vec{x} \\
+				  &= \sum_{i} \lambda_i x_i^2 \\
+	\end{align*}
+\end{proof}
+\begin{note}
+	A function having continuous second-order partial derivatives means that the mixed partial derivatives are equal. (See Clairaut's Theorem.)
+\end{note}
+\begin{theorem}
+	Let $f$ be a scalar field with continuous second-order partial derivatives, and let $H(\vec{a})$ denote the Hessian at a stationary point $\vec{a}$.Then we have:
+	\begin{itemize}
+		\item If all the eigenvalues of the $H(\vec{a})$ are positive, $f$ has a local minimum at $\vec{a}$.
+		\item If all the eigenvalues of $H(\vec{a})$ are negative, $f$ has a local axima at $\vec{a}$
+		\item If $H(\vec{a})$ has both positive and negative eigenvalues, then $f$ has a saddle point at $\vec{a}$.
+	\end{itemize}
+\end{theorem}
+\pagebreak
+\begin{theorem}
+	Let $\vec{a}$ be a stationary point of a scalar field $f(x_1, x_2)$ with continous second-order partial derivatives in a 2-ball $B(\vec{a})$. Let $A = D_{11}f(\vec{a}), B = D_{12}f(\vec{a}, C = D_{22} f(\vec{a})$ and let $\triangle = \det H(\vec{a}) = \det \begin{bmatrix}A & B \\ B & C\end{bmatrix} = AC - B^2$
+	\begin{itemize}
+		\item If $\triangle < 0$, $f$ has a saddle.
+		\item If $\triangle > 0, A > 0$, then $f$ has a local minimum.
+		\item If $\triangle > 0, A < 0$, then $f$ has a local maximum.
+		\item If $\triangle = 0$, then the test is inconclusive.
+	\end{itemize}
+\end{theorem}
+\begin{proof}
+The characteristic equation for a determinant
+	\begin{align*}
+		\lambda^2 - (A + C) \lambda + AC-B^2
+	\end{align*}
+	The trace is (A+C), and $\lambda_1$ and $\lambda_2$, the determinant is $AC-B^2$ or $\lambda_1 \lambda_2$
+	If $\lambda_1 \lambda_2< 0$, that means $\lambda_1, \lambda_2$ have opposite signs, look at the previous theorem (c)
+
+For the 2nd and 3rd parts of the proof.
+	\[\triangle > 0, A > 0, C > 0, A + C > 0, \lambda_1 + \lambda_2 > 0 \implies \lambda_1 > 0, \lambda_2 > 0\]
+	\[\triangle > 0, A < 0, C < 0, A + C < 0, \lambda_1 + \lambda_2 < 0 \implies \lambda_1 < 0, \lambda_2 < 0\]
+\end{proof}
+\begin{note}
+	Probability will be covered using resources from John Tsitsiklis
+\end{note}
+\end{document} 
