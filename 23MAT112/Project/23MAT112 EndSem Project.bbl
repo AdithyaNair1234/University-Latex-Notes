@@ -1,0 +1,14 @@
+\begin{thebibliography}{3}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\def\au#1{#1} \def\ed#1{#1} \def\yr#1{#1}\def\at#1{#1}\def\jt#1{\textit{#1}} \def\bt#1{#1}\def\bvol#1{\textbf{#1}} \def\vol#1{#1} \def\pg#1{#1} \def\publ#1{#1}\def\arxiv#1{#1}\def\org#1{#1}\def\st#1{\textit{#1}}
+
+\bibitem[Brunton \& Kutz(2022)]{Brunton_Kutz_2022}
+{\sc \au{Brunton, Steven~L.} \& \au{Kutz, J.~Nathan}} \yr{2022} {\em Data-Driven Science and Engineering: Machine Learning, Dynamical Systems, and Control\/}, 2nd edn.  \publ{Cambridge University Press}.
+
+\bibitem[Olver(2015)]{Olver2015TopicsIF}
+{\sc \au{Olver, Peter~J.}} \yr{2015} Topics in fourier analysis: Dft \& fft, wavelets, laplace transform.  \bt{In {\em Topics in Fourier Analysis: DFT \& FFT, Wavelets, Laplace Transform\/}}.
+
+\bibitem[Strang(2019)]{Strang2019}
+{\sc \au{Strang, G.}} \yr{2019} {\em Linear Algebra and Learning from Data\/}.  \publ{Philadelphia, PA: Wellesley-Cambridge Press}.
+
+\end{thebibliography}

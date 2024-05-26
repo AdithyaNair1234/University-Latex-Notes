@@ -1,0 +1,115 @@
+\documentclass[twoside]{report}
+
+\input{preamble}
+\renewcommand{\vec}[1]{\underline{#1}}
+\title{\Huge{MIT1806}\\ Class Notes}
+\author{\huge{Adithya Nair}}
+\date{}
+
+\begin{document}
+
+\maketitle
+\newpage% or \cleardoublepage
+% \pdfbookmark[<level>]{<title>}{<dest>}
+\tableofcontents
+
+\chapter{Markov Matrices And The Fourier Series}
+
+\section{Markov Matrices}
+Note, the eigenvalues of A and $A^T$ are the same.
+\begin{definition}[Markov Matrix]
+	A matrix in which all entries are non-negative and each column adds to 1.
+\end{definition}
+
+The interesting thing about Markov matrices is that one of the eigenvalues of such a matrix is always 1. Because $A - I$ is a singular matrix, since it subtracts one from each column, making the sum of each column zero. 
+
+A Markov matrix can be used to model probability questions, let's say the probability of movement of population between two states, with time.
+
+\[\vec{u}_{k+1} = A \vec{u}_k\]
+
+Where $\vec{u_{k+1}}$ is the new population vector, $\vec{u_k}$ is the old population, and A is the probability matrix, which has to be a Markov matrix, since the probabilities add up to 1.
+\section{Fourier Series}
+We know about orthonormal vectors. For an orthonormal basis $\{\vec{q_1},\vec{q_2}, \cdots, \vec{q_n}\}$, a given vector in $\mathbb{R}^n$ can be written as, where $v_i$ is the $i^{th}$ component of $\vec{v}$,
+\[
+	\vec{v} = v_1 \vec{q_1} + v_2 \vec{q_2} + \cdots + v_n \vec{q_n}
+\]
+
+The beauty of orthonormal bases is that we can easily isolate any given component $v_i$ of the vector $\vec{v}$ by simply performing the inner product of $\vec{q_i}$ with the vector $\vec{v}$
+\begin{align*}
+	\vec{q_i}^T\vec{v} &= \vec{q_i}^T v_1 \vec{q_1} + \vec{q_i}^T v_2 \vec{q_2} + \cdots + \vec{q_i}^T v_i \vec{q_i} + \cdots + \vec{q_i}^T v_n \vec{q_n} \\
+	\vec{q_i}^T \vec{v} &= v_i &(\vec{q_i}\cdot \vec{q_j} = 0, \vec{q_i} \cdot \vec{q_i} = 1)
+\end{align*}
+
+Now taking this to the Fourier Series, 
+We can express any function as an infinite linear combination of $\cos$ and $\sin$ functions. Where these sin and cos functions all form an orthonormal basis.
+
+Where, the best parallel for the vector dot product or the inner product for functions are,
+
+\[
+	f^T g = \int_0^{2\pi} f(x) g(x) dx
+\]
+
+It moves from $0$ to $2\pi$ because the Fourier Series is periodic in that range. 
+
+To find the individual components of the function in this infinite dimensional space, we take the inner product of the whole function and the trigonometric function for which that component needs to be found. In other words,
+
+\begin{align*}
+	\int_0^{2\pi} f(x) \cos(x) dx &= \int_0^{2\pi}(a_0 + a_1 \cos(x) + b_1 \sin(x) + a_2 \cos(2x) + b_2 \sin(2x) + \cdots ) \cos(x) dx \\
+				      &=  0 + \int_0^{2\pi} (a_1\cos^2(x) + 0 + 0 + \cdots) \\
+				      &= a_1\pi 
+\end{align*}
+Why can we say that the other terms are zero? It's because we've proved earlier that $\cos(kx)$ and $\cos(lx)$ are orthonormal and similarly $\sin(kx)$ and $\sin(lx)$
+
+In summary,
+
+\[
+	a_i = \frac{1}{\pi} \int_0^{2\pi} f(x) \cos(i x) dx \text{ (Where, i $\neq$ 0)}
+\]
+\[
+	b_i = \frac{1}{\pi} \int_0^{2\pi} f(x) \sin(i x) dx \text{ (Where, i $\neq$ 0)}
+\]
+
+\chapter{Complex Matrices And The Fast Fourier Transform}
+
+Here's learning how to work with complex vectors and complex matrices.
+
+Given a vector $z$ where $z_i \in \mathbb{C}^n$  how do we find norms?
+
+The original definition for vector norms does not work for complex vectors since, there are possibilities for some vectors to give a norm that's 0 because $i^2$ gives -1.
+
+For complex vectors, the original definition for norms do not work. The definitoin for inner product for complex vectors,
+\[
+	\overline{z}^T z = |z_1|^2 + |z_2|^2 + \cdots + |z_n|^2
+\]
+We write $z^H z$ to describe the complex inner product $\overline{z}^T z$.
+
+\section{Hermitian Matrices}
+\begin{definition}[Hermitian Matrices]
+	A complex matrix in which all the entries in the given matrix are equal to their corresponding conjugate transposes.
+\end{definition}
+
+Note, such matrices must have real elements along the diagonal, and they have real eigenvalues and perpendicular eigenvectors.
+
+\section{Unitary Matrices}
+How do we define orthonormal bases for complex vectors? Using the inner product we defined earlier.
+
+\[
+	\overline{q_j}q_k = 0, \text{j $\neq$ k and} 1, \text{j = k} 
+\]
+
+Matrices with vectors in $\mathbb{C}^n$ are said to be unitary, which is a term that is analogous to orthonormal matrices in $\mathbb{R}^n$
+
+\section{Discrete Fourier Transform}
+ 
+
+The Fourier matrix is,
+\[
+	F_n = \begin{bmatrix}
+		1 & 1 & 1 & \cdots & 1 \\
+		1 & w & w^2 & & w^{n-1} \\
+		1 & w^2 & w^4 & & w^{2{n-1}} \\
+		\vdots & & & \ddots & \vdots \\
+		1 & w^{n-1}& w^{2(n-1)} & & w^{(n-1)^2} \\
+	\end{bmatrix}
+\]
+\end{document}

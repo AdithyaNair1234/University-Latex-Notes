@@ -1,10 +1,10 @@
 \documentclass{beamer}
-
-\title{The Lattice Boltzmann Method}
+\usepackage{cancel}
+\title{23PHY114 End-Sem Project \\ The Lattice Boltzmann Method}
 \author{Group 2}
-
-\usetheme{Madrid}
-\usecolortheme{spruce}
+\institute{Amrita Vishwa Vidyapeetham}
+\date{20th March 2024}
+\usetheme{Hannover}
 
 % Berkeley, Hannover
 
@@ -12,9 +12,261 @@
 \maketitle
 \begin{frame}
 \frametitle{Overview}
+\tableofcontents
+\end{frame}
+\section{Kinetic Theory, Probability Density And Equilibrium}
+\begin{frame}
+
+	\frametitle{Kinetic Theory}
+\begin{definition}[Kinetic Theory]
+Branch of \textbf{statistical} physics dealing with the dynamics of \textbf{non-equilibrium} processes and their relation to \textbf{thermodynamic equilibrium}.
+\end{definition}
+
 \end{frame}
 \begin{frame}
-	\section{On The Nature Of Daylight}
+\frametitle{Some assumptions}
+Conservation law is derived from kinetic theory under certain assumptions.
+\begin{itemize}
+	\item<1-> We are dealing with a dilute gas of point-like structureless atoms/molecules.
+	\item<2-> The particles interact via short-range two-body potential.(Short-range means in a close distance, and two-body potential essentially means that it's between two particles.)
+	\item<3->  Collisions assumed to occur instantaneously. 
+	\item<4->  Binary collisions are the only ones of interest. (Collisions between only two particles are considered.)
+\end{itemize}
+\end{frame}
+\begin{frame}
+\frametitle{Probability Distribution}
+	The fundamental variable of kinetic theory: particle or probability distribution function, denoted by $f(\vec{x}, \vec{\xi}, t)$. ($\vec{x}$ is the position, $t$ is time but $\xi$ denotes the microscopic particle velocity)
+\end{frame}
+\begin{frame}
+	\frametitle{The Utility Of The Boltzmann Equation}
+	What the Boltzmann equation helps us at defining is:
+\begin{itemize}
+	\item<1-> The equation helps us analyze the properties of fluids far from equilibrium(covered later)
+	\item<2-> It helps us look at the evolution of the probability distribution function $f(\vec{x}, \xi, t)$ through space and time.
+\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Types Of Equilibrium}
+\begin{itemize}
+	\item \textbf{Local equilibrium}
+	\item \textbf{Global equilibrium}
+\end{itemize}
+\end{frame}
+\begin{frame}
+\frametitle{Types Of Equilibrium}
+These two equilibriums happen on two very different time scales.
+The time scale for microscopic equilibrum denoted by $\tau_{\mu}$ is expressed by,
+
+\[
+	\tau_{\mu} \approxeq \frac{l_{mfp}}{v_T}
+\]
+\end{frame}
+\begin{frame}
+\frametitle{Types Of Equilibrium}
+At a macroscopic time scale, it is denoted by the $\tau_{M}$,
+\[
+	\tau_{M} \approxeq \frac{l_M}{x}
+\]
+\end{frame}
+\begin{frame}
+The probability distribution function $f(\vec{x}, \vec{\xi}, t)$ is connected to macroscopic variables such as $\rho$, $\vec{u}$, $e$ through what are called \textbf{moments}.
+Moments are integrals of $f$ over the entire velocity space, weighted with some function of $\vec{\xi}$
+\end{frame}
+\begin{frame}
+\begin{itemize}
+	\item<1-> Density, $$\rho(\vec{x},t) = \int f(\vec{x}, \vec{\xi}, t) d^3 \xi$$
+	\item<2-> Momentum density,
+		$$\rho(\vec{x},t) \vec{x}(\vec{x},t) = \int \vec{\xi} f(\vec{x}, \vec{\xi}, t) d^3 \xi$$
+	\item<3-> Macroscopic total energy density,
+		$$\rho(\vec{x},t) e(\vec{x},t) = \frac{1}{2} \int \| \xi \|^2 f(\vec{x},\vec{\xi},t) d^3 \xi$$ 
+	\item<4-> Macroscopic internal energy density (thermal motion only)
+		$$\rho(\vec{x},t) e(\vec{x},t) = \frac{1}{2} \int \| \xi - \vec{u}(\vec{x},t) \|^2 f(\vec{x},\vec{\xi},t) d^3 \xi$$
+\end{itemize}
+\end{frame}
+\section{Boltzmann Equation and the BGK Operator}
+\begin{frame}
+	What does the equation answer?
+	\pause
+	\linebreak
+	It answers the question: How does $f(\vec{x},\vec{\xi},t)$ evolve?
+\end{frame}
+\begin{frame}
+	On applying conservation principles to $f$,
+\[
+	\frac{Df}{dt} = \frac{\partial f}{\partial t} + \frac{\partial f}{\partial x_i}(\frac{d x_i}{dt}) + \frac{\partial f}{\partial \xi_i}(\frac{d \xi_i}{dt})
+\]
+\end{frame}
+\begin{frame}
+	What the Boltzmann equation says is that the total change in $f$ can be written as, $\Omega(f)$, which is the collision operator, which is a complex integral.
+\end{frame}
+
+\begin{frame}
+Where, 
+\begin{itemize}
+	\item<1-> $\frac{dx_i}{dt} = \xi_i$ (Particle velocity)
+	\item<2-> $\frac{d \xi_i}{dt} =$ Acceleration or Body force per unit mass = $\frac{F_i}{\rho}$, where $F_i$ is the body force per volume.
+\end{itemize}
+\end{frame}
+\begin{frame}
+	Now we have the Boltzmann equation
+\[
+	\frac{Df}{dt} = \frac{\partial f}{\partial t} + \xi_i \frac{\partial f}{\partial x_i} + \frac{F_i}{\rho} \frac{\partial f}{\partial \xi_i} = \Omega(f)
+\]
+\end{frame}
+\begin{frame}
+	\frametitle{Conservation}
+For conservation of mass,
+\[ 
+	\int \Omega(f) d^3 \xi = 0
+\]
+\pause
+For conservation of momentum,
+\[ 
+\int \vec{\xi} \Omega(f) d^3 \xi = 0
+\]
+\pause
+For conservation of energy
+\[
+	\int \| \xi \|^2 \Omega(f) d^3 \xi = 0
+\]
+\end{frame}
+\begin{frame}
+\frametitle{BGK Operator}
+Where, $\tau$ is called the \textbf{relaxation time}. 
+
+This model captures the relaxation of $f \rightarrow f^{eq}$, and $\tau$ is the timescale associated with collisional relaxation to local equilibrium.
+
+\[ 
+	\Omega(f) = - \frac{1}{\tau} (f - f^{eq})
+\]
+It approximates the operator into a simple linear relationship with f.
+\end{frame}
+\begin{frame}
+	\transdissolve
+	Reducing the Boltzmann equation into a simple linear form,
+\[
+	\frac{\partial f}{\partial t} + \xi_i \frac{\partial f}{\partial x_i} + \frac{F_i}{\rho} \frac{\partial f}{\partial \xi_i} = -\frac{f - f^{eq}}{\tau}
+\]
+\end{frame}
+\section{Lattice Gas Models}
+\begin{frame}
+	\frametitle{Lattice Gas Models}
+	\begin{itemize}
+		\item Lattice Gas models are introduced in 1973 by Hardy, Pomeau and De Pazzis. \item These models act as a precursor to the Lattice Boltzmann Equation. \item This is a simple model of 2D gas dynamics.
+
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\begin{itemize}
+	\item<1-> $\vec{\xi_i}$ represents all the infinite possible directions the particle can go, while $\vec{c_i}$ reperesents the 6 directions possible within the lattice.
+	\item<2-> Another assumption that has been made is that all 6 velocities are equal in magnitude.
+\end{itemize}
+\end{frame}
+\begin{frame}
+	The principles of the FHP model are:
+\begin{enumerate}
+	\item Only one particle of a certain velocity can be present at a node at a given time $t$
+	\item $n_i(\vec{x}, t)$ is a Boolean variable, $n_i$ gives either 0 or 1. $n_i$ gives the absence or presence of a given particle with that momentum.
+		\[
+			\frac{m}{v_o} \sum_i n_i (\vec{x},t) = \rho(\vec{x},t)
+		\]
+		\[
+			\frac{m}{v_o} \sum_i n_i (\vec{x},t) \vec{c_i} = \rho \vec{x}(\vec{x},t)
+		\]
+\end{enumerate}
+\end{frame}
+\begin{frame}
+	\begin{enumerate}
+	\item \textbf{The Collision Step}: $n_i^*(\vec{x},t) = n_i(\vec{x},t) + \Omega_i(\vec{x},t)$, Here, $\Omega_i \in \{-1,0,1\}$ because we are working with boolean variables, due to this,
+		\begin{itemize}
+			\item -1: annihilation
+			\item 0: no action/change
+			\item 1: generation
+		\end{itemize}
+Another thing to note, $\Omega_i$ needs to follow another constraint, 
+\begin{align*}
+	\text{Mass conservation}:&\sum_i \Omega_i (\vec{x},t) = 0 \\
+	\text{Momentum conservation}:&\sum_i \vec{c_i} \Omega_i(\vec{x},t) = 0
+\end{align*}
+\item \textbf{Streaming Step} -   Particles propagate in such a way that they move exactly one node in one time step. This step is also known as the \textbf{Propagation Step}
+\end{enumerate}
+\end{frame}
+\section{Discrete-Velocity Set For Lattice Boltzmann Equation}
+\begin{frame}
+	\frametitle{Force-Free Form}
+	Boltzmann Equation,
+	$$\frac{\partial f}{\partial t} + \xi_i \frac{\partial f}{\partial x_i} + \cancel{\frac{F_i}{\rho}}\frac{\partial f}{\partial \xi_i} = \Omega(f) = - \frac{f - f^{eq}}{\tau}$$
+	Navier Stokes Equation,
+	\[
+	\frac{\partial x_i}{\partial t} + u_j \frac{\partial u_i}{x_j} = -\frac{1}{\rho} \frac{\partial p}{\partial x_i} + \eta \frac{\partial^2 u_i}{\partial x_j. \partial x_j}
+\]
+
+\end{frame}
+\begin{frame}
+	\frametitle{Advantages Over Navier Stokes}
+	\begin{itemize}
+		\item The Navier Stokes equation has an advection term.
+		\item This term can be expresssed as $\vec{u} \cdot \nabla \vec{u}$ is non-linear, and must be solved iteratively.
+		\item While with the Boltzmann equation, this is much simpler because it avoids non-linearity. The term itself is $\xi_i \frac{\partial f}{\partial x_i}$
+	\end{itemize}
+\end{frame}
+\begin{frame}
+	\frametitle{Discrete Velocity Set}
+	There are certain constraints we are imposing,
+	\begin{enumerate}
+		\item We need to come up with a discrete velocity set, rather than all possible infinite directions for $\vec{\xi}$
+		\item The velocity set has to be such that it moves from one point to another in the time step $\Delta t$
+		\item Let's replace $f(\vec{x},\vec{\xi},t)$ with a discrete-velocity particle distribution for $f_\alpha (\vec{x},t)$, which is the probability of particles with velocity $\vec{c_\alpha}$ at $\vec{x} \text{ and } t$.
+	\end{enumerate}
+\end{frame}
+\begin{frame}
+\frametitle{Discretizing The Moments}
+\begin{align*}
+	\rho(\vec{x},t) = \sum_\alpha f_{\alpha} (\vec{x},t) \\
+	\rho(\vec{x},t) \vec{u}(\vec{x},t) = \sum_\alpha f_\alpha(\vec{x},t) \vec{c_\alpha}
+\end{align*}
+\begin{fact}
+	Another important thing to note here is that this function is only defined for multiples of $\Delta t$. So for $f(\vec{x},0)$, then $f(\vec{x},\Delta t)$ and so on...
+\end{fact}
+\end{frame}
+\begin{frame}
+	\frametitle{Lattice Units}
+	By convention, we deal with \textbf{lattice units}, where
+\[
+	\Delta x = \Delta y = \Delta z = 1 \text{ lattice length,} \Delta t = \text{1 lattice time unit}
+\]
+\end{frame}
+\begin{frame}
+	\frametitle{DdQq Notation}
+	We write DdQq for a velocity set where,
+	\begin{itemize}
+		\item d = no. of dimensions
+		\item q = no. of velocities
+	\end{itemize}
+\end{frame}
+\section{The Final Lattice Boltzmann Method}
+\begin{frame}
+	\frametitle{Force-Free Form}
+\[
+	\frac{\partial f}{\partial t} + \xi_i \frac{\partial f}{\partial x_i} = - \frac{f-f^{eq}}{\tau}
+\]
+\end{frame}
+\begin{frame}
+\frametitle{Discretizing The Equilibrium Function}
+\[
+	f^{eq}_\alpha(x,t) = \omega_\alpha\rho(1 + \frac{u \cdot c_\alpha}{c_s^{2}} + \frac{(u \cdot c_\alpha)^{2}}{2c_s^{4}} - \frac{u\cdot u}{2(c_s)^2})
+\]
+\end{frame}
+\begin{frame}
+	\frametitle{Discretized Conservation Terms}	
+	\[\sum_\alpha f^{eq}_\alpha(x,t) = \rho(x,t)\]
+\[\sum_\alpha f^{eq}_\alpha(x,t)c_\alpha = \rho u(x,t)\]
+\end{frame}
+\begin{frame}
+	\frametitle{Steps For The Lattice Boltzmann Method}
+	\begin{enumerate}
+		\item Collision Process
+		\item Streaming Process
+	\end{enumerate}
 \end{frame}
 \end{document}
-

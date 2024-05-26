@@ -1,0 +1,92 @@
+\headcommand {\slideentry {0}{0}{1}{1/1}{}{0}}
+\headcommand {\beamer@framepages {1}{1}}
+\headcommand {\slideentry {0}{0}{2}{2/2}{}{0}}
+\headcommand {\beamer@framepages {2}{2}}
+\headcommand {\beamer@sectionpages {1}{2}}
+\headcommand {\beamer@subsectionpages {1}{2}}
+\headcommand {\sectionentry {1}{Discrete Fourier Analysis}{3}{Discrete Fourier Analysis}{0}}
+\headcommand {\slideentry {1}{0}{1}{3/3}{}{0}}
+\headcommand {\beamer@framepages {3}{3}}
+\headcommand {\beamer@subsectionpages {3}{3}}
+\headcommand {\beamer@subsectionentry {0}{1}{1}{4}{Background}}
+\headcommand {\slideentry {1}{1}{1}{4/6}{Background}{0}}
+\headcommand {\beamer@framepages {4}{6}}
+\headcommand {\slideentry {1}{1}{2}{7/11}{Background}{0}}
+\headcommand {\beamer@framepages {7}{11}}
+\headcommand {\slideentry {1}{1}{3}{12/14}{Background}{0}}
+\headcommand {\beamer@framepages {12}{14}}
+\headcommand {\slideentry {1}{1}{4}{15/16}{Background}{0}}
+\headcommand {\beamer@framepages {15}{16}}
+\headcommand {\slideentry {1}{1}{5}{17/20}{Background}{0}}
+\headcommand {\beamer@framepages {17}{20}}
+\headcommand {\slideentry {1}{1}{6}{21/21}{Background}{0}}
+\headcommand {\beamer@framepages {21}{21}}
+\headcommand {\slideentry {1}{1}{7}{22/22}{Background}{0}}
+\headcommand {\beamer@framepages {22}{22}}
+\headcommand {\beamer@subsectionpages {4}{22}}
+\headcommand {\beamer@subsectionentry {0}{1}{2}{23}{Nth Roots Of Unity And Orthonormality}}
+\headcommand {\slideentry {1}{2}{1}{23/25}{Nth Roots Of Unity And Orthonormality}{0}}
+\headcommand {\beamer@framepages {23}{25}}
+\headcommand {\slideentry {1}{2}{2}{26/27}{Nth Roots Of Unity And Orthonormality}{0}}
+\headcommand {\beamer@framepages {26}{27}}
+\headcommand {\slideentry {1}{2}{3}{28/30}{Nth Roots Of Unity And Orthonormality}{0}}
+\headcommand {\beamer@framepages {28}{30}}
+\headcommand {\slideentry {1}{2}{4}{31/32}{Nth Roots Of Unity And Orthonormality}{0}}
+\headcommand {\beamer@framepages {31}{32}}
+\headcommand {\beamer@subsectionpages {23}{32}}
+\headcommand {\beamer@subsectionentry {0}{1}{3}{33}{Computing The Coefficients}}
+\headcommand {\slideentry {1}{3}{1}{33/33}{Computing The Coefficients}{0}}
+\headcommand {\beamer@framepages {33}{33}}
+\headcommand {\slideentry {1}{3}{2}{34/35}{Computing The Coefficients}{0}}
+\headcommand {\beamer@framepages {34}{35}}
+\headcommand {\slideentry {1}{3}{3}{36/36}{Computing The Coefficients}{0}}
+\headcommand {\beamer@framepages {36}{36}}
+\headcommand {\beamer@subsectionpages {33}{36}}
+\headcommand {\beamer@subsectionentry {0}{1}{4}{37}{Matrix Form}}
+\headcommand {\slideentry {1}{4}{1}{37/37}{Matrix Form}{0}}
+\headcommand {\beamer@framepages {37}{37}}
+\headcommand {\beamer@sectionpages {3}{37}}
+\headcommand {\beamer@subsectionpages {37}{37}}
+\headcommand {\sectionentry {2}{Fast Fourier Transform}{38}{Fast Fourier Transform}{0}}
+\headcommand {\slideentry {2}{0}{1}{38/40}{}{0}}
+\headcommand {\beamer@framepages {38}{40}}
+\headcommand {\slideentry {2}{0}{2}{41/43}{}{0}}
+\headcommand {\beamer@framepages {41}{43}}
+\headcommand {\slideentry {2}{0}{3}{44/44}{}{0}}
+\headcommand {\beamer@framepages {44}{44}}
+\headcommand {\slideentry {2}{0}{4}{45/45}{}{0}}
+\headcommand {\beamer@framepages {45}{45}}
+\headcommand {\beamer@sectionpages {38}{45}}
+\headcommand {\beamer@subsectionpages {38}{45}}
+\headcommand {\sectionentry {3}{Properties Of The Fourier Transform}{46}{Properties Of The Fourier Transform}{0}}
+\headcommand {\slideentry {3}{0}{1}{46/46}{}{0}}
+\headcommand {\beamer@framepages {46}{46}}
+\headcommand {\slideentry {3}{0}{2}{47/47}{}{0}}
+\headcommand {\beamer@framepages {47}{47}}
+\headcommand {\beamer@sectionpages {46}{47}}
+\headcommand {\beamer@subsectionpages {46}{47}}
+\headcommand {\sectionentry {4}{Applications Of The Fourier Transform}{48}{Applications Of The Fourier Transform}{0}}
+\headcommand {\slideentry {4}{0}{1}{48/48}{}{0}}
+\headcommand {\beamer@framepages {48}{48}}
+\headcommand {\slideentry {4}{0}{2}{49/49}{}{0}}
+\headcommand {\beamer@framepages {49}{49}}
+\headcommand {\slideentry {4}{0}{3}{50/50}{}{0}}
+\headcommand {\beamer@framepages {50}{50}}
+\headcommand {\beamer@sectionpages {48}{50}}
+\headcommand {\beamer@subsectionpages {48}{50}}
+\headcommand {\sectionentry {5}{Denoising A Signal}{51}{Denoising A Signal}{0}}
+\headcommand {\slideentry {5}{0}{1}{51/57}{}{0}}
+\headcommand {\beamer@framepages {51}{57}}
+\headcommand {\slideentry {5}{0}{2}{58/58}{}{0}}
+\headcommand {\beamer@framepages {58}{58}}
+\headcommand {\slideentry {5}{0}{3}{59/59}{}{0}}
+\headcommand {\beamer@framepages {59}{59}}
+\headcommand {\slideentry {5}{0}{4}{60/60}{}{0}}
+\headcommand {\beamer@framepages {60}{60}}
+\headcommand {\slideentry {5}{0}{5}{61/61}{}{0}}
+\headcommand {\beamer@framepages {61}{61}}
+\headcommand {\beamer@partpages {1}{61}}
+\headcommand {\beamer@subsectionpages {51}{61}}
+\headcommand {\beamer@sectionpages {51}{61}}
+\headcommand {\beamer@documentpages {61}}
+\headcommand {\gdef \inserttotalframenumber {32}}

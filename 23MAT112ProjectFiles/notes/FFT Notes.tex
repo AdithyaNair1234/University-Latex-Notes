@@ -1,0 +1,188 @@
+\documentclass[twoside]{article}
+
+\input{preamble}
+\title{\Huge{Fast Fourier Transform}\\ Notes}
+\author{\huge{Adithya Nair}}
+\date{}
+
+\begin{document}
+
+\maketitle
+\newpage% or \cleardoublepage
+% \pdfbookmark[<level>]{<title>}{<dest>}
+\section{Overview}
+\begin{enumerate}
+	\item Modern digital media is based on discrete media, rather than continuous functions, analog signals are sampled at equal time intervals and operations are performed on the resulting discrete data. The Fourier series can be used to re-express this sampled data as continuous functions.
+	\item An important application of this is signal and image processing.
+	\item The Fast Fourier Transform is a numerical algorithm that can convert a signal to its discrete Fourier coefficients or vice versa.
+	\item A limitation of the classical Fourier methods, is that it does not do well for localized data, this is solved using wavelets.
+\end{enumerate}
+\section{Discrete Fourier Analysis}
+Fourier analysis decomposes the sampled signal into its fundamental periodic constituents or complex exponential constituents. Each exponential constituent together, forms an infinite orthogonal basis. Functions are expressed in infinite dimensional spaces, a Fourier series of a given function gives us an orthogonal basis to express that same function which is convenient for differentiation and integration.
+
+\begin{align*}
+	&x_j = a + jh, \ j = 0, \dots, n, & \text{where} \ h = \frac{b-a}{n}
+\end{align*}
+
+In signal processing, $x$ represents time instead of space, $x_j$ represents the times we sample $f(x)$.
+
+We use $0 \leq x \leq 2 \pi$ with n equally spaced points,(any function outside that can simply be rescaled.)
+\[ 
+	x_0 = 0, x_1 = \frac{2\pi}{n}, x_2 = \frac{4\pi}{n}, x_j = \frac{2j\pi}{n}, x_{n-1} = \frac{2(n-1)\pi}{n}
+\]
+
+The Euler's form of complex numbers are,
+
+\[
+	f(x) = e^{inx} = \cos{nx} + i \sin{nx}
+\]
+
+
+The discrete Fourier representation, has sampled values,
+
+\[
+	f_j = f(\frac{2j \pi}{n}) = exp(in \frac{2j\pi}{n}) = e^{2j\pi i} = 1
+\]
+
+What this means is that sampling at n equally spaced samples \textbf{cannot} detect periodic signals of $n$ frequency. The Fourier representation always gives the same sample vector $(1,1,\dots, 1)^T$. 
+
+Then the complex functionals for the sample points,
+\begin{equation}
+\label{epower}e^{i(k+n)x} = e^{ikx}
+\end{equation}
+
+
+
+So we need to only use the first $n$ periodic complex exponential functions. Anything above that does not yield any use for a function with $n$ sample points.
+
+Negative frequencies can be converted into positive frequencies by adding $n$
+
+\[
+	e^{-ikx} = e^{i(n-k)x}
+\]
+
+The discrete fourier representation of a function $f(x)$ decomposes a sampled function into a linear combination of complex exponentials. This representation does not need to go past $e^{n-1}$, (See \ref{epower})
+
+\[
+	f(x) \sim p(x) = c_0 + c_1 e^{ix} + c_2 e^{2ix} + \cdots + c_{n-1}e^{(n-1)ix}
+\]
+\begin{note}
+	If $f(x)$ is real then $p(x)$ is real, at the sampled points, but the function could be complex in between. The imaginary component of the function is removed and $p(x)$ is treated as the interpolating trigonometric polynomial of the function $f(x)$. But, the representation is still retained for convenience.
+\end{note}
+
+Writing this in a vector form that belongs in $\mathbb{C}^n$, For each sampled value, we get a vector $\vec{\omega_k}$, which is the vector of all the complex exponentials with the sampled values of $x$ for a given frequency $k$, $0 < k < n$
+\begin{align*}
+	\omega_k &= [e^{i k x_0},e^{ik x_1},\cdots,e^{ik x_{n-1}}]^T \\
+	\omega_k &= [1,e^{i k \frac{2\pi}{n}},e^{ik \frac{4\pi}{n}},\cdots,e^{ik \frac{2\pi(n-1)}{n}}]^T \\
+\end{align*}
+
+Upon applying what we know of the function,
+\[
+	f(x_j) = p(x_j)
+\]
+We can write the entire function sample vector as a finite linear combination of the complex exponentials with coefficients $c_k$ for each sampled value.
+\[
+	\vec{f} = c_0 \omega_0 + c_1 \omega_1 + \cdots c_{n-1} \omega_{n-1}
+\]
+
+To find the coefficients, we need to simply apply an inner product, to isolate each term and find these coefficients.
+
+For vectors in $\mathbb{C}^n$, we define the inner product as,
+
+\[
+	\langle f,g \rangle = \frac{1}{n} \sum_{j = 0}^{j = n-1} f_j \overline{g_j} = \frac{1}{n} f(x_j) \overline{g(x_j}
+\]
+
+To prove the following theorem, we need to understand the properties of $n^{th}$ roots of unity.
+
+\subsection{Nth Roots Of Unity}
+\begin{definition}[$n^{th}$ Roots Of Unity]
+A number $z$ satisfying the equation, where $n \in Z^+$,
+\[
+	z^n = 1
+\]
+\end{definition}
+We define, 
+\[
+	\zeta_n = e^{2 \pi i/n}
+\]
+
+Where,
+\[
+	\zeta_n^n = e^{(2 \pi i / n)n} = 1
+\]
+
+Which means that,
+
+\[
+	\zeta_n = \sqrt[n]{1}
+\]
+
+Also, any $k^{th}$ power of $\zeta_n$ is also an $n^{th}$ root of unity
+
+\[
+	(z^k)^n = (z^n)^k = 1^k = 1
+\]
+
+So for the polynomial $z^n - 1$,
+
+\[
+		z^{n}-1 = (z-1)(z -  \zeta_n)(z-\zeta_n^2)\cdots(z - \zeta_n^{n-1}) 
+\]
+
+Onto proving that this linear combination has an orthonormal basis, upon proving this, the Fourier Transform shifts from a mathematical toy into one of the most powerful algorithms ever discovered.
+\pagebreak
+\begin{theorem}
+	The sampled exponential vectors $\omega_0, \cdots , \omega_{n-1}$ form an orthogonal basis in $\mathbb{C}^n$ with respect to the inner product,
+	\[
+		\langle f,g \rangle = \frac{1}{n} \sum_{j=0}^{n-1} f_j \overline{g_j}
+	\]
+\end{theorem}
+\begin{proof}
+Take $\zeta_n^k = e^{\frac{2\pi k i}{n}}$, this means that $\zeta^n_n = 1$, and there are n equally spaced such complex numbers, between $\zeta_1$ and $\zeta_n$. This means that $\zeta_k$ and all powers of $\zeta_k$ act as $n^{th} $roots of unity
+
+	\begin{align}
+		z^{n}-1 &= (z-1)(z -  \zeta_n)(z-\zeta_n^2)\cdots(z - \zeta_n^{n-1}) &\text{(Since they're $n^{th}$ roots of unity})  \label{pf1} \\
+		z^n-1 &= (z-1)(1 + z + z^2 + \cdots + z^{n-1}) &\text{(Through algebraic factorization)} \label{pf2}
+	\end{align}
+	\begin{align*}
+	(z-1)(1 + z + z^2 + \cdots + z^{n-1})  &= (z-1)(z -  \zeta_n)(z-\zeta_n^2)\cdots(z - \zeta_n^{n-1}) &\text{(Since they're $n^{th}$ roots of unity}) \\
+	1 + z + z^2 + \cdots + z^{n-1}  &= (z -  \zeta_n)(z-\zeta_n^2)\cdots(z - \zeta_n^{n-1}) &\text{Equating \ref{pf1} and \ref{pf2}}\\
+		1 + \zeta_n^k + \zeta_n^{2k} + \cdots + \zeta_n^{(n-1) k} &= \{n,k = 0 \text{ and } 0, 0 < k < n \} &\text{(Substituting $z = \zeta_n^k$)} \\
+	\end{align*}
+As a consequence of \ref{epower}, this extends to all integers $n$. If k is a multiple of n, then the sum gives n, and 0 for all other values of k.
+
+Writing the sampled exponential vectors in terms of the $n^{th}$ roots of unity,
+
+\[
+	\omega_k = (1, \zeta_n^k, \zeta_n^{2k},\zeta_n^{3k}, \cdots, \zeta_n^{(n-1)k})^T
+\]
+
+We conclude that, 
+\[
+	\langle	\omega_k, \omega_l \rangle = \frac{1}{n} \sum_{n=0}^{n-1} \zeta_{n}^{jk} \overline{\zeta_{n}^{jl}} = \frac{1}{n} \sum_{n=0}^{n-1} \zeta_n^{j(k-l)} = \{1, k = l \text{ and } 0, k \neq l\}
+\]
+\end{proof}
+
+Now that orthonormality is established, we can now isolate each discrete Fourier coefficient and compute them by applying inner products.
+
+The properties of an orthonormal basis allows us to isolate any given component $v_i$ of the vector $\vec{v}$ by simply performing the inner product of $\vec{q_i}$ with the vector $\vec{v}$
+\begin{align*}
+	\vec{q_i}^T\vec{v} &= \vec{q_i}^T v_1 \vec{q_1} + \vec{q_i}^T v_2 \vec{q_2} + \cdots + \vec{q_i}^T v_i \vec{q_i} + \cdots + \vec{q_i}^T v_n \vec{q_n} \\
+	\vec{q_i}^T \vec{v} &= v_i &(\vec{q_i}\cdot \vec{q_j} = 0, \vec{q_i} \cdot \vec{q_i} = 1)
+\end{align*}
+
+
+So to compute a discrete Fourier coefficient $c_k$,
+
+\[
+	c_k = \langle f, \omega_k \rangle = \frac{1}{n} \sum_{j=0}^{n-1} f_j \overline{e^{ikx_j}} = \frac{1}{n} \sum_{j=0}^{n-1} \zeta_n^{-jk} f_j
+\]
+
+In a way we are averaging the sampled values of the product of $f(x) e^{-ikx}$
+
+We finally arrive at the Discrete Fourier Transform.
+\section{Fast Fourier Transform}
+
+
+\end{document}

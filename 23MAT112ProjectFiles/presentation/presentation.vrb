@@ -1,0 +1,17 @@
+\frametitle{Code Implementation Of Denoising}
+	\begin{lstlisting}
+dt = .001;
+t = 0:dt:1;
+forig = sin(2*pi*50*t) + sin(2*pi*120*t);
+f = forig + 2.5*randn(size(t));
+n = length(t);
+fhat = fft(f,n);
+PSD = fhat.*conj(fhat)/n;
+freq = 1/(dt*n)*(0:n);
+L = 1:floor(n/2);
+%% Use the PSD to filter out noise
+indices = PSD>100;
+PSDclean = PSD.*indices;
+fhat = indices.*fhat;
+ffilt = ifft(fhat);
+	\end{lstlisting}

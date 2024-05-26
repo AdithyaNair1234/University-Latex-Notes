@@ -1,0 +1,344 @@
+\documentclass{article}
+\title{Lattice Boltzmann Notes}
+\author{Adithya Nair}
+\usepackage{cancel}
+\input{preamble.tex}
+\begin{document}
+\maketitle
+
+\section{Lecture Notes From Amit Gupta}
+\subsection{Lecture 4 - Kinetic theory, probability density and equilibrium}
+\begin{definition}[Kinetic Theory]
+	Branch of \textbf{statistical} physics dealing with the dynamics of \textbf{non-equilibrium} processes and their relation to \textbf{thermodynamic equilibrium}.
+\end{definition} Statistical implies a large scale of particles(atoms/molecules). Non-equilibrium is, as the word suggests, things that are not in equilibrium. Equilibrium as a concept will be covered later.
+
+Conservation law is derived from kinetic theory under certain assumptions.
+
+
+Some assumptions are made:
+\begin{itemize}
+	\item We are dealing with a dilute gas of point-like structureless atoms/molecules.
+	\item The particles interact via short-range two-body potential.(Short-range means in a close distance, and two-body potential essentially means that it's between two particles.)
+	\item Collisions assumed to occur instantaneously. 
+	\item Binary collisions are the only ones of interest. (Collisions between only two particles are considered.)
+\end{itemize}
+
+Let's see how this plays out.
+
+Picture a box that is $1cm^3$, with a temperature of 298K and about $10^{20}$ particles. Let's say I want to estimate how much volume the particles in this box occupy. This volume would be, $N \sigma^3$, where $\sigma$ is the atomic size of each individual particle. Now, $N\sigma^3 <<<<< 1 cm^3$, since we're working with a dilute gas(the particles are far away from each other). 
+
+Now, the fundamental variable of kinetic theory is: particle or probability distribution function, which is denoted by $f(\vec{x}, \vec{\xi}, t)$. Here, $\vec{x}$ is the position, $t$ is time but $\xi$ denotes the microscopic particle velocity.
+
+So for a point that will have a certain position $\vec{x}$ at a certain time $t$, the probability that it will have this given microscopic particle velocity $\vec{\xi_1}$ is given by the function $f(\vec{x}, \vec{\xi_1}, t)$ and so on. The key thing to note here is that microscopic particle velocity is not just a discrete vector. It contains all possible velocities for a given particle.
+
+What the Boltzmann equation helps us at defining is:
+\begin{itemize}
+	\item The equation helps us analyze the properties of fluids far from equilibrium.
+	\item It helps us look at the evolution of the probability distribution function $f(\vec{x}, \xi, t)$ through space and time.
+\end{itemize}
+Onto equilibrium, for this study we are looking at two types of equilibrium.
+\begin{itemize}
+	\item \textbf{Local equilibrium}, which is mathematically defined as when the distribution function $f$ = $f^{eq}$(also known as the Maxell-Boltzmann distribution). This is the distribution that ``annihilates" the collision operator in the Boltzmann equation. This is equilibrium in a microscopic sense. We'll go over what the collision operator means in later lectures.
+	\item \textbf{Global equilibrium}, which is equilibrium in a macroscopic understanding. The two variables that we can perceive at this scale is the mean flow speed 'u' and the temperature '$T$'. Our fluid is said to be in global equilibrium, when these two variables are constant throughout the fluid.
+		In other words, no gradients should exist along any direction $x, y \text{and} z$ for $u$ and $T$.
+\end{itemize}
+These two equilibriums happen on two very different time scales.
+The time scale for microscopic equilibrum denoted by $\tau_{\mu}$ is expressed by,
+
+\[
+	\tau_{\mu} \approxeq \frac{l_{mfp}}{v_T}
+\]
+
+Where, $l_{mfp}$ denotes the mean free path{TODO: Look into the expression for mean free path.} of the particles, and $v_T$ is the thermal velocity. The thermal velocity is denoted by, where $k_B$ is the Boltzmann constant, T is the temperature and m is the mass.
+\[
+	v_T \approxeq \sqrt{\frac{k_BT}{m}}
+\]
+
+At a macroscopic time scale, it is denoted by the $\tau_{M}$,
+\[
+	\tau_{M} \approxeq \frac{l_M}{x}
+\]
+Where $l_M$ is some macroscopic length, and $x$ is the velocity.
+
+You will note that when you plug in values, the microscopic time scale results in values on the order of microns while the macroscopic scale leads to values in the order of seconds, minutes or hours.
+
+The primary focus is on the microscopic side of things, which is where the Boltzmann equation comes in, and using our understanding and analyses of this equation at the microscopic scale, we take that understanding and apply it to the macroscopic scale. Using the microscopic scale, we derive inferences about the macro scale.
+
+The probability distribution function $f(\vec{x}, \vec{\xi}, t)$ is connected to macroscopic variables such as $\rho$, $\vec{u}$, $e$ through what are called \textbf{moments}.
+
+Moments are integrals of $f$ over the entire velocity space, weighted with some function of $\vec{\xi}$
+
+Here are some examples to illustrate the point. Note that $d^3 \xi$ implies that integration is taken along all three components of the microscopic particle velocity vector.
+
+\begin{itemize}
+	\item Density, $$\rho(\vec{x},t) = \int f(\vec{x}, \vec{\xi}, t) d^3 \xi$$
+	\item Momentum density,
+		$$\rho(\vec{x},t) \vec{x}(\vec{x},t) = \int \vec{\xi} f(\vec{x}, \vec{\xi}, t) d^3 \xi$$
+	\item Macroscopic total energy density,
+		$$\rho(\vec{x},t) e(\vec{x},t) = \frac{1}{2} \int \| \xi \|^2 f(\vec{x},\vec{\xi},t) d^3 \xi$$ This contains the energy due to the  bulk motion of fluid(KE) and internal energy due to random thermal motion ($\vec{x}$)
+	\item Macroscopic internal energy density (thermal motion only)
+		$$\rho(\vec{x},t) e(\vec{x},t) = \frac{1}{2} \int \| \xi - \vec{u}(\vec{x},t) \|^2 f(\vec{x},\vec{\xi},t) d^3 \xi$$
+\end{itemize}
+\subsection{Lecture 5 - Boltzmann equation and BGK operator}
+We can fully start talking about the Boltzmann Equation.
+
+The core thing that the equation answers is
+
+\textbf{How does $f(\vec{x},\vec{\xi},t)$ evolve?}
+
+On applying conservation principles to $f$,
+\[
+	\frac{Df}{dt} = \frac{\partial f}{\partial t} + \frac{\partial f}{\partial x_i}(\frac{d x_i}{dt}) + \frac{\partial f}{\partial \xi_i}(\frac{d \xi_i}{dt})
+\]
+Where, 
+\begin{itemize}
+	\item $\frac{dx_i}{dt} = \xi_i$ (Particle velocity)
+	\item $\frac{d \xi_i}{dt} =$ Acceleration or Body force per unit mass = $\frac{F_i}{\rho}$, where $F_i$ is the body force per volume.
+\end{itemize}
+
+Rewriting the equation,
+
+\[
+	\frac{Df}{dt} = \frac{\partial f}{\partial t} + \xi_i \frac{\partial f}{\partial x_i} + \frac{F_i}{\rho} \frac{\partial f}{\partial \xi_i}
+\]
+
+What the Boltzmann equation says is that the total change in $f$ can be written as, $\Omega(f)$, which is the collision operator, which is a complex integral.
+
+Now we have the Boltzmann equation
+\[
+	\frac{Df}{dt} = \frac{\partial f}{\partial t} + \xi_i \frac{\partial f}{\partial x_i} + \frac{F_i}{\rho} \frac{\partial f}{\partial \xi_i} = \Omega(f)
+\]
+
+For dilute gases, mass, momentum and energy are conserve upon collision, since collisions are \textbf{elastic}
+
+Therefore, 
+
+The zeroth moment of the collision operator with the phase space must be zero for mass to be conserved.
+\[ 
+	\int \Omega(f) d^3 \xi = 0
+\]
+
+For the momentum to be conserved, the first moment of the collision operator with the phase space must be zero. 
+
+\[ 
+\int \vec{\xi} \Omega(f) d^3 \xi = 0
+\]
+
+For energy to be conserved, the second moment of the collision operator with the phase space must be zero.  
+\[
+	\int \| \xi \|^2 \Omega(f) d^3 \xi = 0
+\]
+
+The problem is $\Omega(f)$ is a double integral in phase space, which is very difficult to work with analytically and numerically.
+
+But, in 1950, a simpler operator came about, discovered by Bhatnagar, Gross and Krook. They titled the operator the BGK Operator. What this operator does is It approximates the operator into a simple linear relationship with f.
+
+\[ 
+	\Omega(f) = - \frac{1}{\tau} (f - f^eq)
+\]
+Where, $\tau$ is called the \textbf{relaxation time}. This model is thus called the Single-Relaxation Time model or (SRT Model).
+
+This model captures the relaxation of $f \rightarrow f^{eq}$, and $\tau$ is the timescale associated with collisional relaxation to local equilibrium.
+
+We will show later that the Boltzmann equation can be reduced down to a simple linear form that can be solved in a linear sense, with this BGK operator approximating the collision operator.
+\[
+	\frac{\partial f}{\partial t} + \xi_i \frac{\partial f}{\partial x_i} + \frac{F_i}{\rho} \frac{\partial f}{\partial \xi_i} = -\frac{f - f^{eq}}{\tau}
+\]
+\subsection{Lecture 6 - Lattice gas models}
+Lattice Gas models are introduced in 1973 by Hardy, Pomeau and De Pazzis. These models act as a precursor to the Lattice Boltzmann Equation. This is a simple model of 2D gas dynamics.
+
+What we're assuming here is that there's a fictitious fluid, where the particles exist on a square lattice.
+
+Now for each individual particle, there are \textbf{4} possible directions or velocities for the particle to take, and it will in one time-step or $\Delta t$,only move a distance equal to the edge of 1 lattice length, let's say $\Delta x$ or $\Delta y$ where $\Delta x = \Delta y$.
+
+While these particles move, they can also collide. Collisions happen in a way that conserves mass and momentum, which means that none of the particles will disappear and that the net momentum of this collision process. will always stay the same. 
+
+Now this idea was extended by Frisch, Hasslacher and Pomeau in 1986, with a triangular lattice, which allowed for modelling any fluid. This lead to particles having 6 possible velocity directions. These velocities are denoted by $\vec{c}_i$ which is a discrete form of $\vec{\xi_i}$. There are two key differences here,
+
+\begin{itemize}
+	\item $\vec{\xi_i}$ represents all the infinite possible directions the particle can go, while $\vec{c_i}$ reperesents the 6 directions possible within the lattice.
+	\item Another assumption that has been made is that all 6 velocities are equal in magnitude.
+\end{itemize}
+
+The principles of the FHP model are:
+\begin{enumerate}
+	\item Only one particle of a certain velocity can be present at a node at a given time $t$
+	\item Define occupation number $n_i(\vec{x}, t)$ where $i$ is in relation to the corresponding $\vec{c_i}$. Which means that the occupation number for $c_i$ would be denoted by $n_i$.
+	\item $n_i(\vec{x}, t)$ is a Boolean variable, $n_i$ gives either 0 or 1. $n_i$ gives the absence or presence of a given particle with that momentum. More importantly, $n_i$ can be used to calculate the macroscopic variables.
+		So for instance,
+		\[
+			\frac{m}{v_o} \sum_i n_i (\vec{x},t) = \rho(\vec{x},t)
+		\]
+		where m = mass of each particle, and $v_o$ is the volume occupied by a node.
+		\[
+			\frac{m}{v_o} \sum_i n_i (\vec{x},t) \vec{c_i} = \rho \vec{x}(\vec{x},t)
+		\]
+\end{enumerate}
+\subsubsection{Evolution Of Occupation Number}
+Breaking this into steps
+\begin{enumerate}
+	\item \textbf{The Collision Step}: $n_i^*(\vec{x},t) = n_i(\vec{x},t) + \Omega_i(\vec{x},t)$, where $n_i^*$ is the new occupation number or ``post-collision" occupation number, $n_i$ is the current occupation number and $\Omega_i$ is the collision operator, but a special kind used for lattice gas models. Here, $\Omega_i \in \{-1,0,1\}$ because we are working with boolean variables, due to this,
+		\begin{itemize}
+			\item -1: annihilation
+			\item 0: no action/change
+			\item 1: generation
+		\end{itemize}
+Looking at the collision step equation, this makes sense since occupation number can either be 0 or 1, and this only leaves room for the collision operator to be those 3 given values.
+
+Another thing to note, $\Omega_i$ needs to follow another constraint, 
+\begin{align*}
+	\text{Mass conservation}:&\sum_i \Omega_i (\vec{x},t) = 0 \\
+	\text{Momentum convservation}:&\sum_i \vec{c_i} \Omega_i(\vec{x},t) = 0
+\end{align*}
+\item \textbf{Streaming Step} -   Particles propagate in such a way that they move exactly one node in one time step. This step is also known as the \textbf{Propagation Step} Also note,
+	\[
+		\| \vec{c_i}\| = \frac{\Delta x}{\Delta t}
+	\]
+\end{enumerate}
+
+The final picture, envision a bunch of particles organized in a lattice. In the collision step, these particles collide in ways in which the net mass and momentum are conserved.
+\subsection{Discrete-Velocity Set For Lattice Boltzmann Equation}
+So far we've looked at the Boltzmann equation, which dictates the evolution of the probability distribution function.
+
+Let's look at a special case of this equation known as the \textbf{force-free} equation, where the term 
+
+$$\frac{\partial f}{\partial t} + \xi_i \frac{\partial f}{\partial x_i} + \cancel{\frac{F_i}{\rho}}\frac{\partial f}{\partial \xi_i} = \Omega(f) = - \frac{f - f^{eq}}{\tau}$$
+
+Reminder,
+
+\begin{align*}
+	\rho(\vec{x},t) = \int f(\vec{x},\vec{\xi},t) d^3 \xi\\
+	\rho(\vec{x},t)\vec{u}(\vec{x},t) = \int f(\vec{x},\vec{xi},t)\vec{\xi} d^3 \xi
+\end{align*}
+
+The discretized version of the Boltzmann Equation is what we know as the Lattice Boltzmann Equation. This equation takes a simple approach to advection compared to the Navier Stokes equations. (Advection means the horizontal movement of a fluid.)
+
+\[
+	\frac{\partial x_i}{\partial t} + u_j \frac{\partial u_i}{x_j} = -\frac{1}{\rho} \frac{\partial p}{\partial x_i} _ \nu \frac{\partial^2 u_i}{\partial x_j. \partial x_j}
+\]
+This is the Navier Stokes equation for the force free form. The Navier stokes equation has an advection term,
+\[
+	u_j \frac{\partial x_i}{\partial x_j}
+\]
+
+This term can be expresssed as $\vec{u} \cdot \nabla \vec{u}$ and is non-linear, and must be solved iteratively.
+
+While with the Boltzmann equation, this is much simpler because it avoids non-linearity. The term itself is $\xi_i \frac{\partial f}{\partial x_i}$
+
+The Lattice Boltzmann is working under a discrete finite difference, $\vec{\Delta x} \text{ and } \Delta t$, which is necessary for computation.
+
+Indeed, we need to come up with a discrete velocity set, rather than all possible infinite directions for $\vec{\xi}$
+
+The velocity set has to be such that it moves from one point to another in the time step $\Delta t$
+
+We're going to replace $f(\vec{x},\vec{\xi},t)$ with a discrete-velocity particle distribution for $f_\alpha (\vec{x},t)$, which is the probability of particles with velocity $\vec{c_\alpha}$ at $\vec{x} \text{ and } t$. In other words, this function answers the question, what is the probability of a particle at position $\vec{x}$ and time t, in the direction $\alpha$ with velocity $\vec{c_i}$
+
+Now we must remember, the moments must be converted into their discrete equivalents,
+\begin{align*}
+	\rho(\vec{x},t) = \sum_\alpha f_{\alpha} (\vec{x},t) \\
+	\rho(\vec{x},t) \vec{u}(\vec{x},t) = \sum_\alpha f_\alpha(\vec{x},t) \vec{c_\alpha}
+\end{align*}
+
+Another important thing to note here is that this function is only defined for multiples of $\Delta t$
+
+By convention, we deal with \textbf{lattice units}, where
+\[
+	\Delta x = \Delta y = \Delta z = 1 and \Delta t = 1 lattice units
+\]
+
+Finally onto the \textbf{Discrete Velocity Set}
+The notation is DdQq, which was coined by \textbf{Qian}, where d = no. of dimensions, and q = number of velocities.
+
+In one dimension, we have D1Q3 and in 2 dimensions, we have D2Q9. In two-dimensional space, we have 9 discrete velocities. This velocity set is such that when you propagate these distributions, what happens is that these parrticles move directly to the nearest node at the next time-step. In other words, $\vec{c_\alpha} \Delta t$
+
+We need weights for the vectors, such that $c_i$ only moves by one lattice node. We'll go over the velocity sets used in the next section.
+
+\subsection{Lecture 8 - Lattice Boltzmann Equation}
+In the last section we discussed the discrete velocity set. 
+
+Now we get to the actual Lattice Boltzmann Equation,
+Here's the force free form
+\[
+	\frac{\partial f}{\partial t} + \xi_i \frac{\partial f}{\partial x_i} = - \frac{f-f^{eq}}{\tau}
+\]
+
+Using the Hermite series, we discretize the Probability Distribution Function as a weighted sum of the densities and the velocities.
+
+\[
+	f^{eq}_\alpha(x,t) = \omega_\alpha\rho(1 + \frac{u \cdot c_\alpha}{c_s^{2}} + \frac{(u \cdot c_\alpha)^{2}}{2c_s^{4}} - \frac{u\cdot u}{2(c_s)^2})
+\]
+
+Therefore, using this discretized form, we convert the usual Boltzmann equation into a discretized Boltzmann equation.
+\[f_\alpha(x + c_\alpha\delta t , t + \delta t) - f_\alpha(x,t) = -\frac{(f_\alpha(x,t) - f^{eq}_\alpha(x,t))}{\tau/\delta t}\]
+
+Then we discretize the conservation terms with respect to the probability distribution function,
+
+\[\sum_\alpha f^{eq}_\alpha(x,t) = \rho(x,t)\]
+\[\sum_\alpha f^{eq}_\alpha(x,t)c_\alpha = \rho u(x,t)\]
+
+
+
+Step 1: \textbf{Collision process} : First the distribution function undergoes collisions and forms a new distribution function $f^{*}_\alpha(x , t)$ which we define as:
+
+\[f^{*}_\alpha(x , t) = f_\alpha(x , t) - \frac{\delta t}{\tau}(f_\alpha(x ,t) - f^{eq}_\alpha(x , t))\]
+
+Step 2 : \textbf{Streaming Process} : Then this function is equal to the distribution function after a time step $t + \delta t$ 
+
+\[f^{*}_\alpha(x , t) = f_\alpha((x + c_\alpha \delta t) , t + \delta t) \]
+
+This would mean that the fluid will be distributed to other nodes like it is being spread out over the lattice . The velocities that occupied the previous node it was propagating in will be occupied by another set of velocities that might have come from the neighbouring nodes. In this way we each and every node of the lattice attains some discrete velocity.
+
+\section{Algorithm}
+For today’s recreational coding exercise, we simulate fluid flow past a cylinder using the Lattice Boltzmann method. This is a really cool and simple technique to simulate fluid flow: instead of evolving the fluid (Navier-Stokes) equations directly, microscopic particles on a lattice are simulated with streaming and collision processes. The power of the method comes from reducing the high-dimensionality of the microscopic physics onto the lattice, which has limited degrees of freedom.
+
+We will begin with a microscopic description of a fluid that lives on a lattice. For this exercise, we will consider a 2 dimensional lattice with 9 possible velocities at each lattice site (D2Q9). There are 4 connections running North, South, East, and, West, 4 diagonal connections, and 1 connection from a node to itself representing zero velocity. Each lattice site also has a weight $w_i$ associated with it:
+D2Q9 lattice
+
+The microscopic particles that make up a fluid can be described with the distribution function f(x,v), which describes the the phase-space density of fluids at location x traveling with velocity v.
+
+The particles will do two things. Stream and collide. This behavior can be captured by the BGK approximation:
+
+where the left-hand side represents streaming, and the right-hand side approximates collisions. In this approximation, τ is the timescale of which collisions happen, and the distribution function f tends towards some equilibrium state $f^{eq}$ as a result.
+The equation may be discretized onto the lattice as follows
+
+where i denotes 1 out of the 9 lattice directions (with velocity $v_i$).
+
+Moments of the discrete distribution function can be taken to recover fluid variables at each lattice site. For example, the density:
+
+and momentum:
+
+where the sum is over all lattice directions.
+
+It can be shown that this description approximates the Navier-Stokes fluid equations.
+Streaming
+
+The first step in the Lattice Boltzmann method is to stream the particles. This step is incredibly simple. Conceptually, here is what happens. At each lattice site, for each direction i, the value $F_i$ is shifted over to the neighboring lattice site along the connection.
+
+Typically in the Lattice Boltzmann method uses units of $Δt=Δx=1$ and we will use this convention throughout. The streaming velocities are hence: (0,0), (0,1), (0,-1), (1,0), (-1,0), (1,1), (1,-1), (-1,1), (-1,-1).
+Collisions
+
+Next we need to define the equilibrium state as a result of collisions. This depends on the fluid model’s equation of state. For this example, we will assume an isothermal (constant temperature) fluid, which has a constant sound speed. We define units using common conventions such that the lattice speed is c=1 (which corresponds soundspeed²=1/3). The equilibrium state is given by:
+
+which corresponds to the isothermal Navier-Stokes equations with a dynamic viscosity:
+Boundary
+
+Boundary conditions in Lattice Boltzmann are implemented on the microscopic level. In our simulation, we wish to add a solid cylinder. Lattice sites part of this cylinder may be flagged. Here particles will behave differently. In our example, we will consider reflective boundary conditions. Instead of collisions that lead to equilibrium, particles will simply bounce back. This is easily accomplished by swapping lattice directions:
+
+where i and j correspond to lattice directions that point in opposite directions.
+Lattice Boltzmann Method
+
+That’s it conceptually. Let’s put it all together! The following code sets up the lattice and initial condition for Fᵢ, and alternates streaming and collision(+boundary) operators to evolve the system. It is remarkable that this restricted microscopic representation is able to capture macroscopic fluid behavior.
+Flow Past Cylinder
+
+The initial conditions above place a static cylinder into a periodic box with rightward moving fluid. As the flow progresses, turbulence develops in the wake behind the cylinder. This is known as the Kármán vortex street.
+
+Running the code allows you to visualize the vorticity ω=∇×v of the flow past the cylinder in real time and will yield the figure:
+
+The Lattice Boltzmann method has many applications and extensions for complex multi-fluid flows with complicated boundaries.
+
+The main limitation of the original Lattice Boltzmann method is that this representation is not great for capturing highly-compressible/supersonic flows. Such is often the case in astrophysical systems, hence the usage of the method in computational astrophysics remains rare. But there are many other applications.
+
+Below is a Lattice Boltzman nnumerical experiment of the flow past cylinder problem where the viscosity is varied. It is seen that the wake behind the cylinder becomes turbulent once the viscosity is low enough (i.e., once the Reynolds number Re is large enough).
+
+To give another more complicated example, below is a study of wind flow past buildings in a city. Lattice Boltzmann makes it quite easy to add buildings/modify boundary conditions because all one needs to do is flag a lattice site as part of the building. The simulation identifies locations where buildings cause high wind velocities.
+\end{document}
