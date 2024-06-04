@@ -39,3 +39,14 @@ axis([0 2*pi -1 1])
 % Display the figure
 shg;
 
+subplot(2, 1, 2);
+plot(x_interp, real(y_interp));
+title('Interpolated Signal using Low-frequency Fourier Coefficients');
+xlabel('x');
+ylabel('Interpolated y');
+hold on;
+plot(x, y, 'o');
+axis([0 2*pi -1 1])
+
+% Display the figure
+shg;

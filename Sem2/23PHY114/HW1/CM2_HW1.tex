@@ -2,7 +2,7 @@
 \title{Computational Mechanics 2 \\ Homework 1 Solutions}
 \author{Adithya Nair \\ AID23002}
 \usepackage{ragged2e}
-\usepackage{minted}
+\usepackage{listings}
 \input{preamble.tex}
 \begin{document}
 \maketitle
@@ -15,7 +15,7 @@ The Procedure For Question 1:
     \item Add the displacementVector to the original positionVector, plot over both of them.
 \end{enumerate}
 \section{Figure 1} 
-\begin{minted}{octave}
+\begin{lstlisting}{language=octave}
 % Input
 E = 11.4e6;
 areaVector = 50e-4*ones(5,1);
@@ -99,7 +99,7 @@ end
 % Calculating Stresses And Strains
 stressVector = nodeAxialForces/A;
 strainVector = displacementVector/l;
-\end{minted}
+\end{lstlisting}
 
 The calculated displacement vectors are:
 \[
@@ -132,7 +132,7 @@ The resulting forces are -
 \end{figure}
 \section{Figure 2} % (fold)
 \label{sec:figure_}
-\begin{minted}{octave}
+\begin{lstlisting}{language=octave}
      % Input
 E = 200e6;
 elementCount = 10;
@@ -233,7 +233,7 @@ end
 % Calculating Stresses And Strains
 stressVector = nodeAxialForces/A;
 strainVector = displacementVector/l;
-\end{minted}
+\end{lstlisting}
 The calculated displacement vectors are - 
 \[
     \begin{bmatrix}
@@ -277,7 +277,7 @@ The calculated force vectors are -
         \includegraphics[width=0.95\textwidth]{figures/plotq1fig2.pdf}
 \end{figure}
 \section{Figure 3} % (fold)
-\begin{minted}{octave}
+\begin{lstlisting}{language=octave}
      % Input
 E = 200e7;
 elementCount = 9;
@@ -458,7 +458,7 @@ end
 stressVector = nodeAxialForces/A;
 strainVector = displacementVector/l;
 
-\end{minted}
+\end{lstlisting}
 % section Figure 3 (end)
 The calculated force vectors are : - 
 
